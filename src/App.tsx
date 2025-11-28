@@ -78,14 +78,14 @@ function App() {
           >
             {/* Background Image with Parallax-like Zoom Effect */}
             <motion.div 
-              className="absolute inset-0 z-0"
+              className="fixed inset-0 z-0"
               initial={{ scale: 1.1, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 1.5, ease: "easeOut" }}
             >
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black z-10 pointer-events-none" />
               <div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-45"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-45 min-h-screen"
                 style={{
                   backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
                   filter: 'grayscale(100%) contrast(1.2)',
@@ -94,19 +94,19 @@ function App() {
             </motion.div>
 
             {/* Content Container */}
-            <div className="relative z-20 flex-1 flex flex-col px-6 py-8 md:px-12 md:py-16">
+            <div className="relative z-20 flex-1 flex flex-col px-6 py-8 md:px-12 md:py-16 min-h-screen">
               
               {/* Header */}
               <motion.header variants={fadeInUp} className="mb-auto">
               </motion.header>
 
               {/* Main Hero */}
-              <div className="flex-1 flex items-center justify-center">
-                <div className="w-full max-w-md space-y-10 text-center">
+              <div className="flex-1 flex items-center justify-center min-h-[60vh]">
+                <div className="w-full max-w-md space-y-10 text-center md:max-w-lg">
                   
                   <div className="space-y-6">
                     {/* Masked Text Reveal for Name */}
-                    <h1 className="text-7xl md:text-8xl font-black tracking-tighter leading-[0.85] overflow-hidden">
+                    <h1 className="text-7xl md:text-9xl lg:text-[10rem] font-black tracking-tighter leading-[0.85] overflow-hidden">
                       <div className="overflow-hidden">
                         <motion.div variants={revealText}>KHALED</motion.div>
                       </div>
@@ -115,7 +115,7 @@ function App() {
                       </div>
                     </h1>
                     
-                    <motion.div variants={fadeInUp} className="h-1 w-24 bg-white mx-auto" />
+                    <motion.div variants={fadeInUp} className="h-1 w-24 md:w-32 bg-white mx-auto" />
                   </div>
 
                   {/* Interactive Button */}
@@ -125,7 +125,7 @@ function App() {
                       whileHover={{ scale: 1.05, backgroundColor: "#e5e5e5" }}
                       whileTap={{ scale: 0.95 }}
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                      className="w-full bg-white text-black py-5 px-8 font-black text-lg tracking-widest transition-colors duration-300"
+                      className="w-full md:max-w-sm md:mx-auto bg-white text-black py-5 px-8 font-black text-lg md:text-xl tracking-widest transition-colors duration-300"
                     >
                       JOIN THE COMMUNITY
                     </motion.button>
@@ -134,7 +134,7 @@ function App() {
                   {/* Social Links */}
                   <motion.div 
                     variants={fadeInUp} 
-                    className="pt-2 flex justify-center gap-8 text-sm font-bold tracking-widest"
+                    className="pt-2 flex justify-center gap-8 md:gap-12 text-sm md:text-base font-bold tracking-widest"
                   >
                     {[
                       { name: 'SPOTIFY', url: 'https://open.spotify.com/artist/2XYgHUbsmab6VT4a3FF9mX' },
