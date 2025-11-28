@@ -39,13 +39,13 @@ const fadeInUp = {
 };
 
 const revealText = {
-  hidden: { y: "100%" },
+  hidden: { y: "110%" },
   show: { 
     y: "0%", 
     transition: TRANSITION 
   },
   exit: {
-    y: "-100%",
+    y: "-110%",
     transition: { duration: 0.5, ease: "easeInOut" }
   }
 };
@@ -54,7 +54,6 @@ function App() {
   const [showCommunity, setShowCommunity] = useState(false);
 
   return (
-    // changed min-h-screen to min-h-[100dvh] for better mobile browser support
     <div className="min-h-[100dvh] bg-black text-white overflow-hidden font-sans selection:bg-white selection:text-black">
       <AnimatePresence mode="wait">
         {showCommunity ? (
@@ -77,82 +76,80 @@ function App() {
             animate="show"
             exit="exit"
           >
-            {/* Background Image with Parallax-like Zoom Effect */}
+            {/* Background Image - Sharpened via CSS Filters */}
             <motion.div 
               className="fixed inset-0 z-0"
               initial={{ scale: 1.1, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 1.5, ease: "easeOut" }}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black z-10 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black z-10 pointer-events-none" />
               <div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 h-full w-full"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50 h-full w-full"
                 style={{
                   backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
-                  filter: 'grayscale(100%) contrast(1.2) brightness(1.1)',
+                  // Boosted contrast for "Retina" look, lowered brightness to let white text pop
+                  filter: 'grayscale(100%) contrast(1.25) brightness(0.9)',
                 }}
               />
-              {/* Noise overlay */}
+              {/* Noise overlay - reduced opacity for subtlety */}
               <div 
-                className="absolute inset-0 opacity-20 mix-blend-overlay pointer-events-none"
+                className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none"
                 style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
                 }}
               />
             </motion.div>
 
             {/* Content Container */}
-            {/* Added max-w-screen-2xl to prevent elements spreading too wide on ultra-wide monitors */}
             <div className="relative z-20 flex-1 flex flex-col justify-between px-6 py-8 md:px-12 md:py-12 lg:px-20 lg:py-16 max-w-screen-2xl mx-auto w-full h-full">
               
               {/* Header */}
-              <motion.header variants={fadeInUp} className="flex justify-between items-center w-full">
+              <motion.header variants={fadeInUp} className="flex justify-between items-center w-full opacity-80">
+                 {/* Empty header for spacing balance */}
               </motion.header>
 
               {/* Main Hero */}
               <div className="flex-1 flex flex-col items-center justify-center w-full py-8 md:py-0">
-                <div className="w-full max-w-[90vw] md:max-w-2xl lg:max-w-4xl xl:max-w-5xl text-center space-y-8 md:space-y-12">
+                <div className="w-full max-w-4xl text-center space-y-10 md:space-y-12">
                   
-                  <div className="space-y-4 md:space-y-6">
-                    {/* Massive Responsive Typography */}
-                    <h1 className="font-black tracking-tighter leading-[0.85] overflow-hidden
-                                 text-6xl         
-                                 sm:text-7xl      
-                                 md:text-8xl      
-                                 lg:text-9xl      
-                                 xl:text-[10rem]  
-                                 2xl:text-[12rem]">
+                  <div className="space-y-6 md:space-y-8">
+                    {/* Refined Typography: Smaller Size, Wider Tracking */}
+                    <h1 className="font-black tracking-tighter leading-[0.9] overflow-hidden
+                                 text-5xl         
+                                 sm:text-6xl      
+                                 md:text-7xl      
+                                 lg:text-8xl">
                       <div className="overflow-hidden">
-                        <motion.div variants={revealText}>KHALED</motion.div>
+                        <motion.div variants={revealText} className="tracking-wide">KHALED</motion.div>
                       </div>
                       <div className="overflow-hidden">
-                        <motion.div variants={revealText}>SIDDIQ</motion.div>
+                        <motion.div variants={revealText} className="tracking-wide text-gray-300">SIDDIQ</motion.div>
                       </div>
                     </h1>
                     
-                    <motion.div variants={fadeInUp} className="h-0.5 md:h-1 w-16 md:w-32 bg-white mx-auto" />
+                    <motion.div variants={fadeInUp} className="h-px w-12 bg-white/50 mx-auto" />
                   </div>
 
-                  {/* Interactive Button */}
+                  {/* Sharper Button */}
                   <motion.div variants={fadeInUp} className="w-full flex justify-center">
                     <motion.button
                       onClick={() => setShowCommunity(true)}
-                      whileHover={{ scale: 1.05, backgroundColor: "#e5e5e5" }}
-                      whileTap={{ scale: 0.95 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                      // Button is full width on mobile, auto width on tablet+
-                      className="w-full sm:w-auto bg-white text-black py-4 px-8 md:py-5 md:px-12 
-                                 font-black text-base md:text-xl tracking-[0.15em] 
-                                 transition-colors duration-300 whitespace-nowrap"
+                      whileHover={{ scale: 1.02, backgroundColor: "#ffffff" }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ type: "tween", duration: 0.2 }}
+                      className="group bg-white/90 backdrop-blur-sm text-black py-4 px-10
+                                 font-bold text-sm tracking-[0.2em] 
+                                 hover:bg-white transition-all duration-300 uppercase shadow-2xl shadow-black/50"
                     >
-                      JOIN THE COMMUNITY
+                      Enter Community
                     </motion.button>
                   </motion.div>
 
-                  {/* Social Links */}
+                  {/* Social Links - Smaller & Sharper */}
                   <motion.div 
                     variants={fadeInUp} 
-                    className="flex flex-wrap justify-center gap-6 md:gap-12 text-xs md:text-sm font-bold tracking-[0.2em]"
+                    className="flex flex-wrap justify-center gap-8 md:gap-12 text-[10px] md:text-xs font-bold tracking-[0.25em] text-gray-400"
                   >
                     {[
                       { name: 'SPOTIFY', url: 'https://open.spotify.com/artist/2XYgHUbsmab6VT4a3FF9mX' },
@@ -164,8 +161,8 @@ function App() {
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        whileHover={{ y: -3, color: "#9ca3af" }}
-                        className="hover:text-gray-400 transition-colors inline-block"
+                        whileHover={{ y: -2, color: "#ffffff" }}
+                        className="hover:text-white transition-colors inline-block border-b border-transparent hover:border-white/50 pb-0.5"
                       >
                         {link.name}
                       </motion.a>
@@ -177,9 +174,9 @@ function App() {
               {/* Footer */}
               <motion.footer 
                 variants={fadeInUp} 
-                className="text-center text-[10px] md:text-xs tracking-[0.25em] text-gray-500 font-bold uppercase pb-safe"
+                className="text-center text-[9px] tracking-[0.3em] text-gray-600 font-bold uppercase pb-safe"
               >
-                © 2025 All Rights Reserved
+                © 2025 Khaled Siddiq
               </motion.footer>
             </div>
           </motion.div>
