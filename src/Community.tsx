@@ -9,16 +9,18 @@ interface Tier {
   perks: string[];
   accent: string;
   gradient: string;
+  highlight: string;
 }
 
 const tiers: Tier[] = [
   {
     id: 'hear-it-first',
     name: 'hear it first',
-    price: '£3.99/mo',
+    price: '£3.99', // Removed /mo for cleaner UI, added via CSS or small tag
     accent: 'bg-zinc-500',
-    // Gunmetal / Brushed Steel vibe
-    gradient: 'from-zinc-900 via-zinc-800/60 to-zinc-950',
+    // Sharper Industrial Gradient
+    gradient: 'from-zinc-900 via-zinc-800/80 to-black',
+    highlight: 'ring-zinc-700',
     perks: [
       'Get access to songs before they drop',
       'Exclusive access to the community group',
@@ -27,10 +29,11 @@ const tiers: Tier[] = [
   {
     id: 'see-it-first',
     name: 'see it first',
-    price: '£7.99/mo',
-    accent: 'bg-violet-400', // NEW: Amethyst accent bar
-    // Amethyst/Dark Crystal gradient for a premium, luxurious feel
-    gradient: 'from-zinc-950 via-violet-950/70 to-black', 
+    price: '£7.99',
+    accent: 'bg-violet-400',
+    // Deeper, darker Amethyst (More black, less washout)
+    gradient: 'from-black via-[#1a0b2e] to-black', 
+    highlight: 'ring-violet-900/50',
     perks: [
       'All "Hear it First" benefits',
       'Watch the vlog before anyone else',
@@ -50,39 +53,38 @@ function Community() {
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 selection:bg-white selection:text-black font-sans">
-      <div className="px-5 py-12 pb-44 max-w-lg mx-auto">
+      <div className="px-6 py-12 pb-44 max-w-lg mx-auto">
         
-        {/* --- Header Section --- */}
+        {/* --- Header Section (Sharpened) --- */}
         <motion.header
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: EASE }}
-          className="mb-12"
+          className="mb-10 text-center md:text-left"
         >
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-[1px] w-8 bg-zinc-700" />
-            <span className="text-[10px] tracking-[0.25em] font-bold text-zinc-500 uppercase">Khaled Siddiq</span>
+          <div className="inline-flex md:flex items-center gap-3 mb-6 opacity-70">
+            <div className="h-px w-8 bg-white/50 hidden md:block" />
+            <span className="text-[9px] md:text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase">
+              Khaled Siddiq
+            </span>
+            <div className="h-px w-8 bg-white/50 md:hidden" />
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-black tracking-tight leading-[0.9] mb-6 text-white">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.9] mb-4 text-white">
             JOIN THE<br />
-            <span className="text-zinc-500">COMMUNITY</span>
+            <span className="text-zinc-600">COMMUNITY</span>
           </h1>
 
-          <p className="text-base text-zinc-400 leading-relaxed max-w-xs font-medium">
+          <p className="text-xs md:text-sm text-zinc-400 leading-relaxed max-w-xs font-medium tracking-wide mx-auto md:mx-0">
             Get closer to the music, the journey, and the soul behind it all.
           </p>
         </motion.header>
 
         {/* --- Tiers List --- */}
-        <motion.div className="space-y-5">
+        <motion.div className="space-y-4">
           {tiers.map((tier, index) => {
             const isExpanded = expandedTier === tier.id;
             const isPremium = tier.id === 'see-it-first';
-            
-            // Dynamic classes for border and shadow based on tier
-            const borderClass = isPremium ? 'border-violet-900/80' : 'border-zinc-800';
-            const shadowClass = isPremium ? 'shadow-violet-800/20' : 'shadow-black/50';
 
             return (
               <motion.div
@@ -90,47 +92,48 @@ function Community() {
                 key={tier.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1, ease: EASE }}
-                // Applied custom gradient here
+                transition={{ duration: 0.5, delay: index * 0.1, ease: EASE }}
+                // Using 'ring' instead of border for sub-pixel sharp rendering
                 className={`relative overflow-hidden rounded-sm transition-all duration-500 bg-gradient-to-br ${tier.gradient} 
                             ${isExpanded 
-                              ? `shadow-2xl ${shadowClass} ring-1 ring-white/10 ${borderClass}` 
-                              : `border border-white/5 opacity-90 hover:opacity-100`
+                              ? `shadow-2xl shadow-black ring-1 ${tier.highlight}` 
+                              : `ring-1 ring-white/5 hover:ring-white/10`
                             }`}
               >
-                 {/* Subtle noise/texture overlay for "premium" feel */}
-                 <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none mix-blend-overlay" />
+                 {/* Texture Overlay */}
+                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay pointer-events-none" />
 
                 <button
                   onClick={() => toggleTier(tier.id)}
-                  className="w-full text-left p-6 md:p-8 relative z-10"
+                  className="w-full text-left p-6 md:p-7 relative z-10 group"
                 >
                   <motion.div layout="position" className="flex items-start justify-between gap-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-2">
+                      <div className="flex items-center gap-4 mb-1">
                         <motion.div 
                           layout
-                          className={`w-1 h-8 shadow-[0_0_15px_rgba(255,255,255,0.1)] ${tier.accent}`} 
+                          className={`w-0.5 h-6 ${tier.accent} shadow-[0_0_10px_currentColor]`} 
                         />
-                        <h2 className="text-2xl md:text-3xl font-black tracking-tighter text-white drop-shadow-sm">
+                        <h2 className="text-xl md:text-2xl font-black tracking-tighter text-white group-hover:text-white/90 transition-colors">
                           {tier.name}
                         </h2>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <span className="text-xl md:text-2xl font-bold tracking-tight text-white/90">{tier.price}</span>
+                    <div className="text-right flex flex-col items-end">
+                      <span className="text-lg md:text-xl font-bold tracking-tight text-white">{tier.price}</span>
+                      <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">/mo</span>
                     </div>
                   </motion.div>
 
-                  <motion.div layout="position" className="flex items-center justify-between mt-4">
-                    <span className="text-[10px] text-zinc-400 font-bold tracking-[0.2em] uppercase">
+                  <motion.div layout="position" className="flex items-center justify-between mt-5">
+                    <span className="text-[9px] text-zinc-500 font-bold tracking-[0.25em] uppercase group-hover:text-zinc-400 transition-colors">
                       {isExpanded ? 'Includes' : 'View Perks'}
                     </span>
                     <motion.div
                       animate={{ rotate: isExpanded ? 180 : 0 }}
                       transition={{ duration: 0.4, ease: EASE }}
                     >
-                      <ChevronDown className="w-4 h-4 text-zinc-500" />
+                      <ChevronDown className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white transition-colors" />
                     </motion.div>
                   </motion.div>
                 </button>
@@ -144,21 +147,20 @@ function Community() {
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.4, ease: EASE }}
                     >
-                      <div className="px-6 pb-8 md:px-8 relative z-10 border-t border-white/5 pt-6">
-                        <div className="space-y-4">
+                      <div className="px-6 pb-6 md:px-7 relative z-10 border-t border-white/5 pt-5">
+                        <div className="space-y-3">
                           {tier.perks.map((perk, i) => (
                             <motion.div
                               key={i}
-                              initial={{ opacity: 0, x: -10 }}
+                              initial={{ opacity: 0, x: -5 }}
                               animate={{ opacity: 1, x: 0 }}
-                              transition={{ duration: 0.3, delay: i * 0.1 }}
-                              className="flex items-start gap-3 group"
+                              transition={{ duration: 0.3, delay: i * 0.05 }}
+                              className="flex items-start gap-3"
                             >
-                              {/* Metallic Check Circle */}
-                              <div className={`mt-1 p-0.5 rounded-full bg-gradient-to-b from-zinc-700 to-zinc-900 border ${isPremium ? 'border-violet-600' : 'border-zinc-600'} shadow-sm group-hover:border-white transition-colors`}>
-                                <Check className="w-3 h-3 text-white" />
+                              <div className={`mt-1 p-[2px] rounded-full border ${isPremium ? 'border-violet-500/50' : 'border-zinc-700'}`}>
+                                <Check className="w-2 h-2 text-white" />
                               </div>
-                              <span className="text-sm text-zinc-300 leading-relaxed font-medium">
+                              <span className="text-xs md:text-sm text-zinc-300 font-medium tracking-wide">
                                 {perk}
                               </span>
                             </motion.div>
@@ -168,10 +170,12 @@ function Community() {
                         <motion.button
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.2, duration: 0.4 }}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="w-full mt-8 bg-white text-black py-4 font-black text-xs tracking-[0.2em] hover:bg-gray-100 transition-colors uppercase shadow-lg shadow-white/5"
+                          transition={{ delay: 0.1, duration: 0.4 }}
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                          className="w-full mt-6 bg-white text-black py-3.5 
+                                     font-black text-[10px] tracking-[0.25em] uppercase 
+                                     hover:bg-zinc-200 transition-colors shadow-xl"
                         >
                           Join {tier.name}
                         </motion.button>
@@ -192,17 +196,19 @@ function Community() {
         transition={{ delay: 0.5, duration: 0.8, ease: EASE }}
         className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none"
       >
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-transparent h-40" />
-        <div className="relative bg-zinc-950/80 backdrop-blur-xl border-t border-white/10 p-6 pb-8 pointer-events-auto">
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-transparent h-32" />
+        <div className="relative bg-black/40 backdrop-blur-xl border-t border-white/5 p-4 pb-8 pointer-events-auto">
            <div className="max-w-lg mx-auto">
-              <div className="text-center space-y-4">
-                <span className="text-[10px] font-bold text-zinc-500 tracking-[0.2em] block">SECURE CHECKOUT</span>
-                <div className="flex items-center justify-center gap-6 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-                  <img src="/6570d668df4688e1970d40c4_Apple_Pay_logo 1.png" alt="Apple Pay" className="h-6 object-contain" />
-                  <div className="w-px h-4 bg-zinc-700" />
-                  <img src="/6564c3a7eb11a45c6a488674_image 6 copy copy.png" alt="PayPal" className="h-6 object-contain" />
-                  <div className="w-px h-4 bg-zinc-700" />
-                  <img src="/6570d0cdb567796fada15b49_Visa_Inc._logo 1 copy.svg" alt="Visa" className="h-4 object-contain" />
+              <div className="text-center space-y-3">
+                <span className="text-[9px] font-bold text-zinc-600 tracking-[0.25em] block uppercase">
+                  Secure Checkout
+                </span>
+                <div className="flex items-center justify-center gap-5 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+                  <img src="/6570d668df4688e1970d40c4_Apple_Pay_logo 1.png" alt="Apple Pay" className="h-5 object-contain" />
+                  <div className="w-px h-3 bg-zinc-800" />
+                  <img src="/6564c3a7eb11a45c6a488674_image 6 copy copy.png" alt="PayPal" className="h-5 object-contain" />
+                  <div className="w-px h-3 bg-zinc-800" />
+                  <img src="/6570d0cdb567796fada15b49_Visa_Inc._logo 1 copy.svg" alt="Visa" className="h-3 object-contain" />
                 </div>
               </div>
            </div>
