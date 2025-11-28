@@ -87,7 +87,7 @@ function App() {
               <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50 h-full w-full"
                 style={{
-                  backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
+                  backgroundImage: `url('/Khaled-Siddiq.webp')`,
                   // Boosted contrast for "Retina" look, lowered brightness to let white text pop
                   filter: 'grayscale(100%) contrast(1.25) brightness(0.9)',
                 }}
