@@ -8,8 +8,7 @@ interface Tier {
   price: string;
   perks: string[];
   accent: string;
-  gradient: string; // New property for specific gradients
-  border: string;   // New property for border styling
+  gradient: string;
 }
 
 const tiers: Tier[] = [
@@ -20,7 +19,6 @@ const tiers: Tier[] = [
     accent: 'bg-zinc-500',
     // Gunmetal / Brushed Steel vibe
     gradient: 'from-zinc-900 via-zinc-800/60 to-zinc-950',
-    border: 'border-zinc-800',
     perks: [
       'Get access to songs before they drop',
       'Exclusive access to the community group',
@@ -30,10 +28,9 @@ const tiers: Tier[] = [
     id: 'see-it-first',
     name: 'see it first',
     price: '£7.99/mo',
-    accent: 'bg-white',
-    // Premium Obsidian / Dark Platinum vibe
-    gradient: 'from-zinc-800 via-zinc-900 to-black', 
-    border: 'border-zinc-700/60',
+    accent: 'bg-violet-400', // NEW: Amethyst accent bar
+    // Amethyst/Dark Crystal gradient for a premium, luxurious feel
+    gradient: 'from-zinc-950 via-violet-950/70 to-black', 
     perks: [
       'All "Hear it First" benefits',
       'Watch the vlog before anyone else',
@@ -81,6 +78,11 @@ function Community() {
         <motion.div className="space-y-5">
           {tiers.map((tier, index) => {
             const isExpanded = expandedTier === tier.id;
+            const isPremium = tier.id === 'see-it-first';
+            
+            // Dynamic classes for border and shadow based on tier
+            const borderClass = isPremium ? 'border-violet-900/80' : 'border-zinc-800';
+            const shadowClass = isPremium ? 'shadow-violet-800/20' : 'shadow-black/50';
 
             return (
               <motion.div
@@ -89,14 +91,14 @@ function Community() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1, ease: EASE }}
-                // The gradient logic is applied here using bg-gradient-to-br
-                className={`relative overflow-hidden rounded-sm transition-all duration-500 bg-gradient-to-br ${tier.gradient} ${
-                  isExpanded 
-                    ? `shadow-2xl shadow-black/50 ring-1 ring-white/10 ${tier.border}` 
-                    : 'border border-white/5 opacity-90 hover:opacity-100'
-                }`}
+                // Applied custom gradient here
+                className={`relative overflow-hidden rounded-sm transition-all duration-500 bg-gradient-to-br ${tier.gradient} 
+                            ${isExpanded 
+                              ? `shadow-2xl ${shadowClass} ring-1 ring-white/10 ${borderClass}` 
+                              : `border border-white/5 opacity-90 hover:opacity-100`
+                            }`}
               >
-                 {/* Subtle noise/texture overlay for "premium" feel (optional, using gradient for now) */}
+                 {/* Subtle noise/texture overlay for "premium" feel */}
                  <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none mix-blend-overlay" />
 
                 <button
@@ -108,7 +110,7 @@ function Community() {
                       <div className="flex items-center gap-4 mb-2">
                         <motion.div 
                           layout
-                          className={`w-1 h-8 shadow-[0_0_15px_rgba(255,255,255,0.3)] ${tier.accent}`} 
+                          className={`w-1 h-8 shadow-[0_0_15px_rgba(255,255,255,0.1)] ${tier.accent}`} 
                         />
                         <h2 className="text-2xl md:text-3xl font-black tracking-tighter text-white drop-shadow-sm">
                           {tier.name}
@@ -153,7 +155,7 @@ function Community() {
                               className="flex items-start gap-3 group"
                             >
                               {/* Metallic Check Circle */}
-                              <div className="mt-1 p-0.5 rounded-full bg-gradient-to-b from-zinc-700 to-zinc-900 border border-zinc-600 shadow-sm group-hover:border-zinc-500 transition-colors">
+                              <div className={`mt-1 p-0.5 rounded-full bg-gradient-to-b from-zinc-700 to-zinc-900 border ${isPremium ? 'border-violet-600' : 'border-zinc-600'} shadow-sm group-hover:border-white transition-colors`}>
                                 <Check className="w-3 h-3 text-white" />
                               </div>
                               <span className="text-sm text-zinc-300 leading-relaxed font-medium">
