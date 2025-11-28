@@ -16,7 +16,7 @@ const tiers: Tier[] = [
   {
     id: 'hear-it-first',
     name: 'hear it first',
-    price: '£3.99', // Removed /mo for cleaner UI, added via CSS or small tag
+    price: '£3.99',
     accent: 'bg-zinc-500',
     // Sharper Industrial Gradient
     gradient: 'from-zinc-900 via-zinc-800/80 to-black',
@@ -100,7 +100,7 @@ function Community() {
                               : `ring-1 ring-white/5 hover:ring-white/10`
                             }`}
               >
-                 {/* Texture Overlay */}
+                 {/* Texture Overlay (Global for card) */}
                  <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay pointer-events-none" />
 
                 <button
@@ -167,17 +167,35 @@ function Community() {
                           ))}
                         </div>
 
+                        {/* ✨ THE SANDBLASTED BUTTON (Updated) ✨ */}
                         <motion.button
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.1, duration: 0.4 }}
                           whileHover={{ scale: 1.01 }}
                           whileTap={{ scale: 0.99 }}
-                          className="w-full mt-6 bg-white text-black py-3.5 
-                                     font-black text-[10px] tracking-[0.25em] uppercase 
-                                     hover:bg-zinc-200 transition-colors shadow-xl"
+                          className="group relative w-full mt-8 overflow-hidden rounded-sm
+                                     bg-white/10 backdrop-blur-md border border-white/20
+                                     shadow-[0_0_20px_-5px_rgba(255,255,255,0.15)]
+                                     hover:shadow-[0_0_30px_-5px_rgba(255,255,255,0.25)]
+                                     hover:bg-white/20 hover:border-white/40
+                                     transition-all duration-500
+                                     py-4"
                         >
-                          Join {tier.name}
+                           {/* Inner Noise Texture (Sandblast Effect) */}
+                           <div 
+                            className="absolute inset-0 opacity-25 mix-blend-overlay pointer-events-none"
+                            style={{
+                              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                            }}
+                          />
+
+                          {/* Moving Sheen Gradient */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+
+                          <span className="relative z-10 font-black text-[10px] tracking-[0.25em] text-white uppercase group-hover:text-white transition-colors">
+                            Join {tier.name}
+                          </span>
                         </motion.button>
                       </div>
                     </motion.div>
