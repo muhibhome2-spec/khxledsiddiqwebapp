@@ -31,7 +31,7 @@ const tiers: Tier[] = [
     name: 'see it first',
     price: '£7.99',
     accent: 'bg-violet-400',
-    // Deeper, darker Amethyst (More black, less washout)
+    // Deeper, darker Amethyst
     gradient: 'from-black via-[#1a0b2e] to-black', 
     highlight: 'ring-violet-900/50',
     perks: [
@@ -55,7 +55,7 @@ function Community() {
     <div className="min-h-screen bg-black text-zinc-100 selection:bg-white selection:text-black font-sans">
       <div className="px-6 py-12 pb-44 max-w-lg mx-auto">
         
-        {/* --- Header Section (Sharpened) --- */}
+        {/* --- Header Section --- */}
         <motion.header
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -93,19 +93,23 @@ function Community() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1, ease: EASE }}
-                // Using 'ring' instead of border for sub-pixel sharp rendering
                 className={`relative overflow-hidden rounded-sm transition-all duration-500 bg-gradient-to-br ${tier.gradient} 
                             ${isExpanded 
                               ? `shadow-2xl shadow-black ring-1 ${tier.highlight}` 
                               : `ring-1 ring-white/5 hover:ring-white/10`
                             }`}
               >
-                 {/* Texture Overlay (Global for card) */}
+                 {/* Texture Overlay */}
                  <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay pointer-events-none" />
 
                 <button
                   onClick={() => toggleTier(tier.id)}
                   className="w-full text-left p-6 md:p-7 relative z-10 group"
+                  // Added stability styles here as well just in case
+                  style={{
+                    WebkitFontSmoothing: 'antialiased',
+                    MozOsxFontSmoothing: 'grayscale',
+                  }}
                 >
                   <motion.div layout="position" className="flex items-start justify-between gap-4">
                     <div className="flex-1">
@@ -167,7 +171,7 @@ function Community() {
                           ))}
                         </div>
 
-                        {/* ✨ THE SANDBLASTED BUTTON (Updated) ✨ */}
+                        {/* ✨ STABILITY FIX APPLIED HERE ✨ */}
                         <motion.button
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -181,8 +185,15 @@ function Community() {
                                      hover:bg-white/20 hover:border-white/40
                                      transition-all duration-500
                                      py-4"
+                          // ⬇️ THIS IS THE MAGIC FIX ⬇️
+                          style={{
+                            WebkitFontSmoothing: 'antialiased', // Forces consistent rendering
+                            MozOsxFontSmoothing: 'grayscale',
+                            backfaceVisibility: 'hidden',       // Prevents visual jitter on scale
+                            transform: 'translateZ(0)',         // Forces GPU layer isolation
+                          }}
                         >
-                           {/* Inner Noise Texture (Sandblast Effect) */}
+                           {/* Inner Noise Texture */}
                            <div 
                             className="absolute inset-0 opacity-25 mix-blend-overlay pointer-events-none"
                             style={{
