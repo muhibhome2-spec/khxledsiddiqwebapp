@@ -100,8 +100,6 @@ function App() {
               
               {/* Header */}
               <motion.header variants={fadeInUp} className="flex justify-between items-center w-full">
-                {/* Visual anchor for header - added responsive sizing */}
-                <div className="w-10 h-10 md:w-12 md:h-12 border-2 border-white/80" />
               </motion.header>
 
               {/* Main Hero */}
