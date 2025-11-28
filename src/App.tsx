@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Community from './Community';
 
 // --- Animation Constants ---
-const TRANSITION = { duration: 0.8, ease: [0.6, 0.01, 0.05, 0.9] };
+const TRANSITION = { duration: 0.8, ease: [0.6, 0.01, -0.05, 0.9] };
 
 const containerVars = {
   hidden: { opacity: 0 },
@@ -54,7 +54,8 @@ function App() {
   const [showCommunity, setShowCommunity] = useState(false);
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden font-sans selection:bg-white selection:text-black">
+    // changed min-h-screen to min-h-[100dvh] for better mobile browser support
+    <div className="min-h-[100dvh] bg-black text-white overflow-hidden font-sans selection:bg-white selection:text-black">
       <AnimatePresence mode="wait">
         {showCommunity ? (
           <motion.div
@@ -70,7 +71,7 @@ function App() {
         ) : (
           <motion.div
             key="landing"
-            className="relative min-h-screen flex flex-col"
+            className="relative min-h-[100dvh] flex flex-col"
             variants={containerVars}
             initial="hidden"
             animate="show"
@@ -85,7 +86,7 @@ function App() {
             >
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black z-10 pointer-events-none" />
               <div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-45 min-h-screen"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-45 h-full w-full"
                 style={{
                   backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
                   filter: 'grayscale(100%) contrast(1.2)',
@@ -94,19 +95,28 @@ function App() {
             </motion.div>
 
             {/* Content Container */}
-            <div className="relative z-20 flex-1 flex flex-col px-6 py-8 md:px-12 md:py-16 min-h-screen">
+            {/* Added max-w-screen-2xl to prevent elements spreading too wide on ultra-wide monitors */}
+            <div className="relative z-20 flex-1 flex flex-col justify-between px-6 py-8 md:px-12 md:py-12 lg:px-20 lg:py-16 max-w-screen-2xl mx-auto w-full h-full">
               
               {/* Header */}
-              <motion.header variants={fadeInUp} className="mb-auto">
+              <motion.header variants={fadeInUp} className="flex justify-between items-center w-full">
+                {/* Visual anchor for header - added responsive sizing */}
+                <div className="w-10 h-10 md:w-12 md:h-12 border-2 border-white/80" />
               </motion.header>
 
               {/* Main Hero */}
-              <div className="flex-1 flex items-center justify-center min-h-[60vh]">
-                <div className="w-full max-w-md space-y-10 text-center md:max-w-lg">
+              <div className="flex-1 flex flex-col items-center justify-center w-full py-8 md:py-0">
+                <div className="w-full max-w-[90vw] md:max-w-2xl lg:max-w-4xl xl:max-w-5xl text-center space-y-8 md:space-y-12">
                   
-                  <div className="space-y-6">
-                    {/* Masked Text Reveal for Name */}
-                    <h1 className="text-7xl md:text-9xl lg:text-[10rem] font-black tracking-tighter leading-[0.85] overflow-hidden">
+                  <div className="space-y-4 md:space-y-6">
+                    {/* Massive Responsive Typography */}
+                    <h1 className="font-black tracking-tighter leading-[0.85] overflow-hidden
+                                 text-6xl         
+                                 sm:text-7xl      
+                                 md:text-8xl      
+                                 lg:text-9xl      
+                                 xl:text-[10rem]  
+                                 2xl:text-[12rem]">
                       <div className="overflow-hidden">
                         <motion.div variants={revealText}>KHALED</motion.div>
                       </div>
@@ -115,17 +125,20 @@ function App() {
                       </div>
                     </h1>
                     
-                    <motion.div variants={fadeInUp} className="h-1 w-24 md:w-32 bg-white mx-auto" />
+                    <motion.div variants={fadeInUp} className="h-0.5 md:h-1 w-16 md:w-32 bg-white mx-auto" />
                   </div>
 
                   {/* Interactive Button */}
-                  <motion.div variants={fadeInUp}>
+                  <motion.div variants={fadeInUp} className="w-full flex justify-center">
                     <motion.button
                       onClick={() => setShowCommunity(true)}
                       whileHover={{ scale: 1.05, backgroundColor: "#e5e5e5" }}
                       whileTap={{ scale: 0.95 }}
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                      className="w-full md:max-w-sm md:mx-auto bg-white text-black py-5 px-8 font-black text-lg md:text-xl tracking-widest transition-colors duration-300"
+                      // Button is full width on mobile, auto width on tablet+
+                      className="w-full sm:w-auto bg-white text-black py-4 px-8 md:py-5 md:px-12 
+                                 font-black text-base md:text-xl tracking-[0.15em] 
+                                 transition-colors duration-300 whitespace-nowrap"
                     >
                       JOIN THE COMMUNITY
                     </motion.button>
@@ -134,12 +147,12 @@ function App() {
                   {/* Social Links */}
                   <motion.div 
                     variants={fadeInUp} 
-                    className="pt-2 flex justify-center gap-8 md:gap-12 text-sm md:text-base font-bold tracking-widest"
+                    className="flex flex-wrap justify-center gap-6 md:gap-12 text-xs md:text-sm font-bold tracking-[0.2em]"
                   >
                     {[
                       { name: 'SPOTIFY', url: 'https://open.spotify.com/artist/2XYgHUbsmab6VT4a3FF9mX' },
                       { name: 'APPLE', url: 'https://music.apple.com/my/artist/kh%C4%81led-sidd%C4%ABq/1170959386' },
-                      { name: 'IG', url: 'https://www.instagram.com/khxledsiddiq/?hl=en' }
+                      { name: 'INSTAGRAM', url: 'https://www.instagram.com/khxledsiddiq/?hl=en' }
                     ].map((link) => (
                       <motion.a
                         key={link.name}
@@ -157,7 +170,10 @@ function App() {
               </div>
 
               {/* Footer */}
-              <motion.footer variants={fadeInUp} className="mt-auto text-center text-[10px] md:text-xs tracking-[0.2em] text-gray-500 font-bold uppercase">
+              <motion.footer 
+                variants={fadeInUp} 
+                className="text-center text-[10px] md:text-xs tracking-[0.25em] text-gray-500 font-bold uppercase pb-safe"
+              >
                 © 2025 All Rights Reserved
               </motion.footer>
             </div>
