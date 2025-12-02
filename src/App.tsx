@@ -1,34 +1,41 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionTemplate, useMotionValue } from 'framer-motion';
-import Community from './Community'; // Your existing Community file
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Community from './Community';
 import PremiumGlass from './components/ui/premium-glass';
-import { cn } from '@/lib/utils';
 
 // --- Animation Constants ---
-const TRANSITION = { duration: 0.9, ease: [0.6, 0.01, 0.05, 0.95] };
+const TRANSITION = { duration: 0.8, ease: [0.6, 0.01, 0.05, 0.9] };
 
 const containerVars = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2,
+      staggerChildren: 0.1,
+      delayChildren: 0.3,
     },
   },
   exit: {
     opacity: 0,
-    transition: { duration: 0.5, ease: "easeInOut" },
+    transition: {
+      staggerChildren: 0.05,
+      staggerDirection: -1,
+      when: "afterChildren",
+    },
   },
 };
 
 const fadeInUp = {
-  hidden: { opacity: 0, y: 40, filter: "blur(10px)" },
+  hidden: { opacity: 0, y: 30 },
   show: { 
     opacity: 1, 
     y: 0, 
-    filter: "blur(0px)",
     transition: TRANSITION 
+  },
+  exit: { 
+    opacity: 0, 
+    y: -30, 
+    transition: { duration: 0.5, ease: "easeInOut" } 
   },
 };
 
@@ -36,59 +43,33 @@ const revealText = {
   hidden: { y: "110%" },
   show: { 
     y: "0%", 
-    transition: { ...TRANSITION, duration: 1.2 } 
+    transition: TRANSITION 
   },
+  exit: {
+    y: "-110%",
+    transition: { duration: 0.5, ease: "easeInOut" }
+  }
 };
 
 function App() {
   const [showCommunity, setShowCommunity] = useState(false);
-  
-  // --- Aura Spotlight Effect ---
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
 
   return (
-    <div 
-      className="relative min-h-[100dvh] bg-neutral-950 text-white overflow-hidden font-sans selection:bg-indigo-500/30 antialiased"
-      onMouseMove={handleMouseMove}
-    >
-      {/* --- Premium Atmosphere --- */}
-      <div className="fixed inset-0 -z-10 pointer-events-none">
+    <div className="min-h-[100dvh] bg-neutral-950 text-white overflow-hidden font-sans selection:bg-indigo-500/30 antialiased subpixel-antialiased">
+      {/* Premium background environment */}
+      <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-neutral-950" />
-        {/* Static Ambient Glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]" />
-        
-        {/* Dynamic Mouse Spotlight */}
-        <motion.div
-          className="absolute inset-0 z-0 opacity-40 mix-blend-screen"
-          style={{
-            background: useMotionTemplate`
-              radial-gradient(
-                600px circle at ${mouseX}px ${mouseY}px,
-                rgba(120,119,198,0.15),
-                transparent 80%
-              )
-            `,
-          }}
-        />
-        
-        {/* Film Grain */}
-        <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_120%_at_50%_120%,rgba(120,119,198,0.2),rgba(255,255,255,0))]" />
       </div>
 
       <AnimatePresence mode="wait">
         {showCommunity ? (
           <motion.div
             key="community"
-            initial={{ opacity: 0, scale: 0.98, filter: "blur(10px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, scale: 1.02, filter: "blur(10px)" }}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
             transition={TRANSITION}
             className="h-full"
           >
@@ -103,107 +84,95 @@ function App() {
             animate="show"
             exit="exit"
           >
-            {/* Background Image - Cinematic & Darkened */}
+            {/* Background Image - Sharpened via CSS Filters */}
             <motion.div 
               className="fixed inset-0 z-0"
-              initial={{ scale: 1.15, opacity: 0 }}
+              initial={{ scale: 1.1, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 2, ease: "easeOut" }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-neutral-950/30 via-neutral-950/60 to-neutral-950 z-10" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black z-10 pointer-events-none" />
               <div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat h-full w-full opacity-60 grayscale-[80%] contrast-[1.1]"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50 h-full w-full"
                 style={{
-                  backgroundImage: `url('/Khaled-Siddiq.jpeg')`, 
+                  backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
+                  // Boosted contrast for "Retina" look, lowered brightness to let white text pop
+                  filter: 'grayscale(100%) contrast(1.25) brightness(0.9)',
+                }}
+              />
+              {/* Noise overlay - reduced opacity for subtlety */}
+              <div 
+                className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
                 }}
               />
             </motion.div>
 
             {/* Content Container */}
-            <div className="relative z-20 flex-1 flex flex-col justify-between px-6 py-8 md:px-12 lg:px-20 max-w-screen-2xl mx-auto w-full">
+            <div className="relative z-20 flex-1 flex flex-col justify-between px-6 py-8 md:px-12 md:py-12 lg:px-20 lg:py-16 max-w-screen-2xl mx-auto w-full h-full">
               
-              {/* Header spacer */}
-              <div className="h-20" />
+              {/* Header */}
+              <motion.header variants={fadeInUp} className="flex justify-between items-center w-full opacity-80">
+                 {/* Empty header for spacing balance */}
+              </motion.header>
 
               {/* Main Hero */}
-              <div className="flex-1 flex flex-col items-center justify-center w-full">
-                <div className="w-full max-w-5xl text-center space-y-12">
+              <div className="flex-1 flex flex-col items-center justify-center w-full py-8 md:py-0">
+                <div className="w-full max-w-4xl text-center space-y-10 md:space-y-12">
                   
-                  <div className="space-y-8">
-                    {/* Hero Typography: Metallic Gradient Text */}
-                    <h1 className="font-black tracking-tighter leading-[0.8] flex flex-col items-center
-                                 text-6xl sm:text-7xl md:text-8xl lg:text-9xl">
+                  <div className="space-y-6 md:space-y-8">
+                    {/* Refined Typography: Smaller Size, Wider Tracking */}
+                    <h1 className="font-black tracking-tighter leading-[0.85] overflow-hidden
+                                 text-5xl         
+                                 sm:text-6xl      
+                                 md:text-7xl      
+                                 lg:text-8xl">
                       <div className="overflow-hidden">
-                        <motion.span 
-                          variants={revealText} 
-                          className="block text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-neutral-400 drop-shadow-2xl"
-                        >
-                          KHALED
-                        </motion.span>
+                        <motion.div variants={revealText} className="tracking-tight">KHALED</motion.div>
                       </div>
                       <div className="overflow-hidden">
-                        <motion.span 
-                          variants={revealText} 
-                          className="block text-transparent bg-clip-text bg-gradient-to-b from-neutral-400 to-neutral-800"
-                        >
-                          SIDDIQ
-                        </motion.span>
+                        <motion.div variants={revealText} className="tracking-tight text-gray-300">SIDDIQ</motion.div>
                       </div>
                     </h1>
                     
-                    <motion.div variants={fadeInUp} className="h-px w-24 bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto" />
+                    <motion.div variants={fadeInUp} className="h-px w-12 bg-white/50 mx-auto" />
                   </div>
 
-                  {/* CTA Button: Optical Center Fixes */}
+                  {/* Sharper Button */}
                   <motion.div variants={fadeInUp} className="w-full flex justify-center">
                     <PremiumGlass
                       variant="card"
                       intensity="medium"
                       glow={true}
-                      className="group cursor-pointer rounded-full"
+                      className="group cursor-pointer"
                       onClick={() => setShowCommunity(true)}
-                      whileHover={{ scale: 1.04 }}
-                      whileTap={{ scale: 0.96 }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <div className="relative py-5 px-12">
-                         {/* Animated Shimmer Border */}
-                         <div className="absolute inset-0 rounded-full border border-white/10 group-hover:border-white/30 transition-colors duration-500" />
-                         
-                         <span className="relative z-10 font-bold text-xs md:text-sm tracking-[0.25em] uppercase text-white group-hover:text-indigo-200 transition-colors duration-300 flex items-center justify-center gap-3 leading-none">
-                           <span>Enter Community</span>
-                           {/* Tiny animated arrow */}
-                           <motion.svg 
-                             viewBox="0 0 24 24" 
-                             fill="none" 
-                             stroke="currentColor" 
-                             className="w-3 h-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:ml-0 -translate-x-2 transition-all duration-300"
-                           >
-                             <path d="M5 12h14M12 5l7 7-7 7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                           </motion.svg>
-                         </span>
+                      <div className="py-4 px-10 font-bold text-sm tracking-[0.2em] uppercase text-white group-hover:text-indigo-200 transition-colors duration-300 flex items-center justify-center min-h-[20px] leading-none">
+                        <span className="leading-none">Enter Community</span>
                       </div>
                     </PremiumGlass>
                   </motion.div>
 
-                  {/* Social Links: Glass Pills */}
+                  {/* Social Links - Smaller & Sharper */}
                   <motion.div 
                     variants={fadeInUp} 
-                    className="flex flex-wrap justify-center gap-4"
+                    className="flex flex-wrap justify-center gap-8 md:gap-12 text-[10px] md:text-xs font-bold tracking-[0.25em] text-gray-500 leading-none"
                   >
                     {[
-                      { name: 'SPOTIFY', url: '#' },
-                      { name: 'APPLE', url: '#' },
-                      { name: 'INSTAGRAM', url: '#' }
+                      { name: 'SPOTIFY', url: 'https://open.spotify.com/artist/2XYgHUbsmab6VT4a3FF9mX' },
+                      { name: 'APPLE', url: 'https://music.apple.com/my/artist/kh%C4%81led-sidd%C4%ABq/1170959386' },
+                      { name: 'INSTAGRAM', url: 'https://www.instagram.com/khxledsiddiq/?hl=en' }
                     ].map((link) => (
                       <motion.a
                         key={link.name}
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        whileHover={{ y: -2 }}
-                        className="px-5 py-2 rounded-full border border-white/5 bg-white/[0.02] backdrop-blur-sm
-                                   text-[10px] font-bold tracking-[0.2em] text-neutral-400 hover:text-white hover:border-white/20 hover:bg-white/[0.05]
-                                   transition-all duration-300 leading-none"
+                        whileHover={{ y: -2, color: "#ffffff" }}
+                        className="hover:text-indigo-300 transition-colors inline-block border-b border-transparent hover:border-indigo-400/50 pb-0.5 leading-none"
                       >
                         {link.name}
                       </motion.a>
@@ -215,7 +184,7 @@ function App() {
               {/* Footer */}
               <motion.footer 
                 variants={fadeInUp} 
-                className="text-center md:text-right text-[9px] tracking-[0.3em] text-neutral-600 font-bold uppercase pb-4"
+                className="text-center text-[9px] tracking-[0.25em] text-gray-700 font-bold uppercase pb-safe leading-none"
               >
                 © 2025 Khaled Siddiq
               </motion.footer>
