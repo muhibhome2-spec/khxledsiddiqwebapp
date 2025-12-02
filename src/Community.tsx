@@ -2,14 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronDown } from 'lucide-react';
 import PremiumGlass from './components/ui/premium-glass';
-// FIX: We import the library functions directly here instead of looking for the missing file
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-// FIX: We define the utility function right here to stop the error
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from './lib/utils';
 
 interface Tier {
   id: string;
@@ -59,7 +52,7 @@ function Community() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-zinc-100 selection:bg-indigo-500/30 font-sans antialiased">
+    <div className="min-h-screen bg-neutral-950 text-zinc-100 selection:bg-indigo-500/30 font-sans antialiased subpixel-antialiased">
       {/* --- Premium Background Environment --- */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-neutral-950" />
@@ -80,13 +73,13 @@ function Community() {
         >
           <div className="inline-flex md:flex items-center gap-3 mb-6 opacity-70">
             <div className="h-px w-8 bg-white/50 hidden md:block" />
-            <span className="text-[9px] md:text-10px tracking-[0.3em] font-bold text-zinc-400 uppercase">
+            <span className="text-[9px] md:text-[10px] tracking-[0.25em] font-bold text-zinc-400 uppercase leading-none">
               Khaled Siddiq
             </span>
             <div className="h-px w-8 bg-white/50 md:hidden" />
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.9] mb-4 text-white">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.85] mb-4 text-white">
             JOIN THE<br />
             <span className="inline-block relative text-transparent bg-clip-text bg-gradient-to-b from-indigo-300 via-indigo-400 to-indigo-600">
               COMMUNITY
@@ -94,7 +87,7 @@ function Community() {
             </span>
           </h1>
 
-          <p className="text-xs md:text-sm text-zinc-400 leading-relaxed max-w-xs font-medium tracking-wide mx-auto md:mx-0">
+          <p className="text-xs md:text-sm text-zinc-400 leading-[1.5] max-w-xs font-medium tracking-[0.01em] mx-auto md:mx-0">
             Get closer to the music, the journey, and the soul behind it all.
           </p>
         </motion.header>
@@ -132,42 +125,43 @@ function Community() {
 
                 <motion.button
                   onClick={() => toggleTier(tier.id)}
-                  className="w-full text-left p-6 md:p-7 relative z-20"
+                  className="w-full text-left p-6 md:p-7 relative z-20 min-h-[44px] flex flex-col justify-center"
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
-                  <motion.div layout="position" className="flex items-start justify-between gap-4">
+                  <motion.div layout="position" className="flex items-center justify-between gap-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-1">
+                      <div className="flex items-center gap-4 mb-2">
                         <motion.div 
                           layout
                           className={`w-0.5 h-6 ${tier.accent} shadow-[0_0_12px_currentColor] rounded-full`} 
                         />
-                        <h2 className="text-xl md:text-2xl font-black tracking-tighter text-white group-hover:text-indigo-100 transition-colors">
+                        <h2 className="text-xl md:text-2xl font-black tracking-tighter leading-none text-white group-hover:text-indigo-100 transition-colors">
                           {tier.name}
                         </h2>
                       </div>
                     </div>
-                    <div className="text-right flex flex-col items-end">
-                      <span className="text-lg md:text-xl font-bold tracking-tight text-white">{tier.price}</span>
-                      <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">/mo</span>
+                    <div className="text-right flex flex-col items-end justify-center">
+                      <span className="text-lg md:text-xl font-bold tracking-tight leading-none text-white">{tier.price}</span>
+                      <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-[0.25em] leading-none mt-0.5">/mo</span>
                     </div>
                   </motion.div>
 
-                  <motion.div layout="position" className="flex items-center justify-between mt-5">
+                  <motion.div layout="position" className="flex items-center justify-between mt-4">
                     <span className={cn(
-                        "text-[9px] font-bold tracking-[0.25em] uppercase transition-colors duration-300",
+                        "text-[9px] font-bold tracking-[0.25em] uppercase leading-none transition-colors duration-300",
                         isPremium ? "text-indigo-300 group-hover:text-indigo-200" : "text-zinc-500 group-hover:text-zinc-300"
                     )}>
                       {isExpanded ? 'Includes' : 'View Perks'}
                     </span>
                     <motion.div
+                      className="flex items-center justify-center"
                       animate={{ rotate: isExpanded ? 180 : 0 }}
                       transition={{ duration: 0.4, ease: EASE }}
                     >
                       <ChevronDown className={cn(
-                          "w-3.5 h-3.5 transition-colors",
+                          "w-3.5 h-3.5 transition-colors flex-shrink-0",
                           isPremium ? "text-indigo-400" : "text-zinc-600"
                       )} />
                     </motion.div>
@@ -182,7 +176,7 @@ function Community() {
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.4, ease: EASE }}
                     >
-                      <div className="px-6 pb-6 md:px-7 border-t border-white/5 pt-5 relative z-20">
+                      <div className="px-6 pb-6 md:px-7 border-t border-white/5 pt-6 relative z-20">
                         <div className="space-y-3">
                           {tier.perks.map((perk, i) => (
                             <motion.div
@@ -190,12 +184,12 @@ function Community() {
                               initial={{ opacity: 0, x: -5 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ duration: 0.3, delay: i * 0.05 }}
-                              className="flex items-start gap-3"
+                              className="flex items-start gap-3 min-h-[20px]"
                             >
-                              <div className={`mt-1 p-[2px] rounded-full border ${isPremium ? 'border-indigo-400 bg-indigo-500/10' : 'border-zinc-700'}`}>
-                                <Check className="w-2 h-2 text-white" />
+                              <div className={`mt-0.5 p-[2px] rounded-full border flex items-center justify-center flex-shrink-0 ${isPremium ? 'border-indigo-400 bg-indigo-500/10' : 'border-zinc-700'}`}>
+                                <Check className="w-2 h-2 text-white flex-shrink-0" strokeWidth={3} />
                               </div>
-                              <span className="text-xs md:text-sm text-zinc-300 font-medium tracking-wide">
+                              <span className="text-xs md:text-sm text-zinc-300 font-medium tracking-[0.01em] leading-relaxed">
                                 {perk}
                               </span>
                             </motion.div>
@@ -217,12 +211,14 @@ function Community() {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
-                          <span className={cn(
-                              "font-black text-[10px] tracking-[0.25em] uppercase transition-colors",
+                          <div className="flex items-center justify-center min-h-[20px]">
+                            <span className={cn(
+                              "font-black text-[10px] tracking-[0.25em] uppercase leading-none transition-colors",
                               isPremium ? "text-indigo-100" : "text-white group-hover:text-indigo-200"
-                          )}>
-                            Join {tier.name}
-                          </span>
+                            )}>
+                              Join {tier.name}
+                            </span>
+                          </div>
                         </PremiumGlass>
                       </div>
                     </motion.div>
@@ -246,16 +242,16 @@ function Community() {
         <PremiumGlass
           variant="default"
           intensity="heavy"
-          className="relative border-t border-white/5 p-4 pb-8 pointer-events-auto rounded-none backdrop-blur-2xl"
+          className="relative border-t border-white/5 py-4 px-4 pb-8 pointer-events-auto rounded-none backdrop-blur-2xl"
         >
            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
            
            <div className="max-w-lg mx-auto relative z-10">
-              <div className="text-center space-y-3">
-                <span className="text-[9px] font-bold text-zinc-500 tracking-[0.25em] block uppercase">
+              <div className="text-center space-y-4">
+                <span className="text-[9px] font-bold text-zinc-500 tracking-[0.25em] leading-none block uppercase">
                   Secure Checkout
                 </span>
-                <div className="flex items-center justify-center gap-5 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+                <div className="flex items-center justify-center gap-5 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500 min-h-[20px]">
                   <img src="/6570d668df4688e1970d40c4_Apple_Pay_logo 1.png" alt="Apple Pay" className="h-5 object-contain" />
                   <div className="w-px h-3 bg-zinc-800" />
                   <img src="/6564c3a7eb11a45c6a488674_image 6 copy copy.png" alt="PayPal" className="h-5 object-contain" />

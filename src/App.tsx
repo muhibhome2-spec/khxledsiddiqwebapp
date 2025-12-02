@@ -55,7 +55,7 @@ function App() {
   const [showCommunity, setShowCommunity] = useState(false);
 
   return (
-    <div className="min-h-[100dvh] bg-neutral-950 text-white overflow-hidden font-sans selection:bg-indigo-500/30 antialiased">
+    <div className="min-h-[100dvh] bg-neutral-950 text-white overflow-hidden font-sans selection:bg-indigo-500/30 antialiased subpixel-antialiased">
       {/* Premium background environment */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-neutral-950" />
@@ -123,16 +123,16 @@ function App() {
                   
                   <div className="space-y-6 md:space-y-8">
                     {/* Refined Typography: Smaller Size, Wider Tracking */}
-                    <h1 className="font-black tracking-tighter leading-[0.9] overflow-hidden
+                    <h1 className="font-black tracking-tighter leading-[0.85] overflow-hidden
                                  text-5xl         
                                  sm:text-6xl      
                                  md:text-7xl      
                                  lg:text-8xl">
                       <div className="overflow-hidden">
-                        <motion.div variants={revealText} className="tracking-wide">KHALED</motion.div>
+                        <motion.div variants={revealText} className="tracking-tight">KHALED</motion.div>
                       </div>
                       <div className="overflow-hidden">
-                        <motion.div variants={revealText} className="tracking-wide text-gray-300">SIDDIQ</motion.div>
+                        <motion.div variants={revealText} className="tracking-tight text-gray-300">SIDDIQ</motion.div>
                       </div>
                     </h1>
                     
@@ -150,8 +150,8 @@ function App() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <div className="py-4 px-10 font-bold text-sm tracking-[0.2em] uppercase text-white group-hover:text-indigo-200 transition-colors duration-300">
-                        Enter Community
+                      <div className="py-4 px-10 font-bold text-sm tracking-[0.2em] uppercase text-white group-hover:text-indigo-200 transition-colors duration-300 flex items-center justify-center min-h-[20px] leading-none">
+                        <span className="leading-none">Enter Community</span>
                       </div>
                     </PremiumGlass>
                   </motion.div>
@@ -159,7 +159,7 @@ function App() {
                   {/* Social Links - Smaller & Sharper */}
                   <motion.div 
                     variants={fadeInUp} 
-                    className="flex flex-wrap justify-center gap-8 md:gap-12 text-[10px] md:text-xs font-bold tracking-[0.25em] text-gray-500"
+                    className="flex flex-wrap justify-center gap-8 md:gap-12 text-[10px] md:text-xs font-bold tracking-[0.25em] text-gray-500 leading-none"
                   >
                     {[
                       { name: 'SPOTIFY', url: 'https://open.spotify.com/artist/2XYgHUbsmab6VT4a3FF9mX' },
@@ -172,7 +172,7 @@ function App() {
                         target="_blank"
                         rel="noopener noreferrer"
                         whileHover={{ y: -2, color: "#ffffff" }}
-                        className="hover:text-indigo-300 transition-colors inline-block border-b border-transparent hover:border-indigo-400/50 pb-0.5"
+                        className="hover:text-indigo-300 transition-colors inline-block border-b border-transparent hover:border-indigo-400/50 pb-0.5 leading-none"
                       >
                         {link.name}
                       </motion.a>
@@ -184,7 +184,7 @@ function App() {
               {/* Footer */}
               <motion.footer 
                 variants={fadeInUp} 
-                className="text-center text-[9px] tracking-[0.3em] text-gray-700 font-bold uppercase pb-safe"
+                className="text-center text-[9px] tracking-[0.25em] text-gray-700 font-bold uppercase pb-safe leading-none"
               >
                 © 2025 Khaled Siddiq
               </motion.footer>

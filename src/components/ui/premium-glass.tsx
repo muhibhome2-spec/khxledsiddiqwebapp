@@ -8,6 +8,7 @@ interface PremiumGlassProps extends Omit<HTMLMotionProps<"div">, 'children'> {
   intensity?: 'light' | 'medium' | 'heavy';
   glow?: boolean;
   noise?: boolean;
+  as?: any;
 }
 
 const PremiumGlass = forwardRef<HTMLDivElement, PremiumGlassProps>(
@@ -18,9 +19,10 @@ const PremiumGlass = forwardRef<HTMLDivElement, PremiumGlassProps>(
     intensity = 'medium',
     glow = false,
     noise = true,
+    as: Component = motion.div,
     ...props 
   }, ref) => {
-    const baseClasses = "relative overflow-hidden border backdrop-blur-xl";
+    const baseClasses = "relative overflow-hidden border backdrop-blur-xl antialiased";
     
     const variantClasses = {
       default: "rounded-2xl",
@@ -40,7 +42,7 @@ const PremiumGlass = forwardRef<HTMLDivElement, PremiumGlassProps>(
       : "";
 
     return (
-      <motion.div
+      <Component
         ref={ref}
         className={cn(
           baseClasses,
@@ -75,7 +77,7 @@ const PremiumGlass = forwardRef<HTMLDivElement, PremiumGlassProps>(
         <div className="relative z-10">
           {children}
         </div>
-      </motion.div>
+      </Component>
     );
   }
 );
