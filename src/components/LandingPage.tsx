@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import PremiumGlass from './ui/premium-glass';
 
 // --- Animation Constants ---
-// Switched to a Quartic ease for a "weightier", more luxurious feel
 const TRANSITION = { duration: 1.4, ease: [0.25, 1, 0.5, 1] };
 
 const containerVars = {
@@ -53,7 +52,7 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       initial="hidden"
       animate="show"
     >
-      {/* --- Static Background Image (Unchanged) --- */}
+      {/* --- Static Background Image --- */}
       <div className="fixed inset-0 -z-20">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-60 grayscale"
@@ -67,8 +66,7 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       {/* --- Heavy Vignette --- */}
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] pointer-events-none" />
 
-      {/* --- UPGRADE 1: Film Grain Texture Overlay --- */}
-      {/* This adds that subtle 'static' texture that makes digital design look like print */}
+      {/* --- Film Grain Texture Overlay --- */}
       <div 
         className="fixed inset-0 pointer-events-none z-0 opacity-[0.04] mix-blend-overlay"
         style={{ backgroundImage: NOISE_SVG }}
@@ -86,31 +84,37 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
             
             {/* Typography Stack */}
             <div className="space-y-4 md:space-y-6 relative">
-              {/* Subtle ambient light behind text to lift it off background */}
+              {/* Subtle ambient light */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-white/5 blur-[100px] rounded-full pointer-events-none" />
 
-              <h1 className="font-black tracking-[-0.08em] leading-[0.85] text-6xl sm:text-7xl md:text-8xl lg:text-[9.5rem] text-transparent bg-clip-text bg-gradient-to-b from-white via-neutral-300 to-neutral-600 drop-shadow-2xl">
+              <h1 className="font-black tracking-[-0.08em] leading-[0.85] text-6xl sm:text-7xl md:text-8xl lg:text-[9.5rem] drop-shadow-2xl">
                 <div className="overflow-hidden py-2">
-                  <motion.div variants={textReveal} className="origin-bottom-left" style={{ fontVariantCaps: 'small-caps' }}>
+                  <motion.div 
+                    variants={textReveal} 
+                    className="origin-bottom-left text-transparent bg-clip-text bg-gradient-to-b from-white via-neutral-100 to-neutral-400"
+                    style={{ fontVariantCaps: 'small-caps' }}
+                  >
                     khaled
                   </motion.div>
                 </div>
                 <div className="overflow-hidden py-2">
-                  <motion.div variants={textReveal} className="origin-bottom-left text-neutral-400" style={{ fontVariantCaps: 'small-caps' }}>
+                  <motion.div 
+                    variants={textReveal} 
+                    className="origin-bottom-left text-transparent bg-clip-text bg-gradient-to-b from-neutral-400 via-neutral-500 to-neutral-700"
+                    style={{ fontVariantCaps: 'small-caps' }}
+                  >
                     siddiq
                   </motion.div>
                 </div>
               </h1>
               
               <motion.div variants={fadeInUp} className="overflow-hidden flex justify-center">
-                  {/* UPGRADE 2: Tapered Divider Line */}
                   <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-white/50 to-transparent mt-8" />
               </motion.div>
             </div>
 
             {/* Interactive Button */}
             <motion.div variants={fadeInUp} className="w-full flex justify-center relative">
-              {/* UPGRADE 3: Breathing Glow Effect */}
               <motion.div 
                 animate={{ opacity: [0.3, 0.6, 0.3], scale: [0.8, 1, 0.8] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -129,13 +133,12 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
                 <div className="py-5 px-12 font-bold text-[10px] md:text-[11px] tracking-[0.3em] text-neutral-200 group-hover:text-white transition-colors duration-500 flex items-center justify-center relative overflow-hidden" style={{ fontVariantCaps: 'small-caps' }}>
                   <span className="relative z-10 drop-shadow-md">enter community</span>
                   
-                  {/* Shimmer effect */}
                   <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-[1.5s] ease-in-out bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
                 </div>
               </PremiumGlass>
             </motion.div>
 
-            {/* Socials - Minimalist */}
+            {/* Socials */}
             <motion.div 
               variants={fadeInUp} 
               className="flex flex-wrap justify-center gap-10 md:gap-14 text-[9px] md:text-[10px] font-semibold tracking-[0.25em] text-neutral-500"
@@ -158,7 +161,6 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
                   className="hover:text-white transition-colors duration-500 relative group py-2"
                 >
                   {link.name}
-                  {/* Refined underline animation */}
                   <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-[1px] bg-white/60 transition-all duration-500 group-hover:w-full" />
                 </motion.a>
               ))}
