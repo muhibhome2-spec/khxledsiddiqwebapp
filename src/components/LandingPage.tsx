@@ -115,3 +115,5 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
           <div className="w-full text-center relative">
             
             {/* The Typography - Helvetica, Bold, Tight */}
+  )
+}
