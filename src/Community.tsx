@@ -52,14 +52,21 @@ function Community() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-zinc-100 selection:bg-indigo-500/30 font-sans antialiased subpixel-antialiased">
+    <div className="min-h-screen bg-neutral-950 text-zinc-100 selection:bg-indigo-500/30 font-sans antialiased text-rendering-geometricPrecision">
       {/* --- Premium Background Environment --- */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-neutral-950" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_120%_at_50%_120%,rgba(120,119,198,0.2),rgba(255,255,255,0))]" />
-        {/* Optional: Subtle Noise Overlay for texture */}
-        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+        {/* Static mesh gradient background - no animation */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_120%_at_50%_120%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
+        {/* High-contrast noise vignette */}
+        <div className="absolute inset-0 opacity-[0.08]" 
+             style={{
+               backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+               backgroundSize: '256px 256px'
+             }} />
+        {/* Dark vignette for depth */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_100%_100%_at_50%_50%,transparent_40%,rgba(0,0,0,0.4)_100%)]" />
       </div>
 
       <div className="px-6 py-12 pb-44 max-w-lg mx-auto">
@@ -73,21 +80,20 @@ function Community() {
         >
           <div className="inline-flex md:flex items-center gap-3 mb-6 opacity-70">
             <div className="h-px w-8 bg-white/50 hidden md:block" />
-            <span className="text-[9px] md:text-[10px] tracking-[0.25em] font-bold text-zinc-400 uppercase leading-none">
+            <span className="text-[9px] md:text-[10px] tracking-widest font-bold text-zinc-400 uppercase leading-none antialiased">
               Khaled Siddiq
             </span>
             <div className="h-px w-8 bg-white/50 md:hidden" />
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.85] mb-4 text-white">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.85] mb-4 text-white antialiased">
             JOIN THE<br />
             <span className="inline-block relative text-transparent bg-clip-text bg-gradient-to-b from-indigo-300 via-indigo-400 to-indigo-600">
               COMMUNITY
-              <div className="absolute top-0 left-0 w-full h-[1px] bg-white/30 blur-[1px] mix-blend-overlay" />
             </span>
           </h1>
 
-          <p className="text-xs md:text-sm text-zinc-400 leading-[1.5] max-w-xs font-medium tracking-[0.01em] mx-auto md:mx-0">
+          <p className="text-xs md:text-sm text-zinc-400 leading-[1.5] max-w-xs font-medium tracking-[0.01em] mx-auto md:mx-0 antialiased">
             Get closer to the music, the journey, and the soul behind it all.
           </p>
         </motion.header>
@@ -105,24 +111,11 @@ function Community() {
                 key={tier.id}
                 variant="card"
                 intensity={isPremium ? "heavy" : "medium"}
-                className={cn(
-                  "cursor-pointer group relative overflow-hidden",
-                  isPremium ? "shadow-indigo-500/20 shadow-2xl border-indigo-500/20" : "shadow-xl"
-                )}
+                className="cursor-pointer group relative overflow-hidden isolation-isolate will-change-transform translate-z-0"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1, ease: EASE }}
               >
-                <motion.div 
-                    className="absolute inset-0 -z-10 transition-opacity duration-500"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    animate={{ opacity: isExpanded ? 0.6 : 0 }}
-                    style={{
-                      background: `radial-gradient(600px circle at 50% 50%, ${tier.glowColor}, transparent 40%)`
-                    }}
-                />
-
                 <motion.button
                   onClick={() => toggleTier(tier.id)}
                   className="w-full text-left p-6 md:p-7 relative z-20 min-h-[44px] flex flex-col justify-center"
@@ -137,20 +130,20 @@ function Community() {
                           layout
                           className={`w-0.5 h-6 ${tier.accent} shadow-[0_0_12px_currentColor] rounded-full`} 
                         />
-                        <h2 className="text-xl md:text-2xl font-black tracking-tighter leading-none text-white group-hover:text-indigo-100 transition-colors">
+                        <h2 className="text-xl md:text-2xl font-black tracking-tighter leading-none text-white group-hover:text-indigo-100 transition-colors antialiased">
                           {tier.name}
                         </h2>
                       </div>
                     </div>
                     <div className="text-right flex flex-col items-end justify-center">
-                      <span className="text-lg md:text-xl font-bold tracking-tight leading-none text-white">{tier.price}</span>
-                      <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-[0.25em] leading-none mt-0.5">/mo</span>
+                      <span className="text-lg md:text-xl font-bold tracking-tight leading-none text-white antialiased">{tier.price}</span>
+                      <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest leading-none mt-0.5 antialiased">/mo</span>
                     </div>
                   </motion.div>
 
                   <motion.div layout="position" className="flex items-center justify-between mt-4">
                     <span className={cn(
-                        "text-[9px] font-bold tracking-[0.25em] uppercase leading-none transition-colors duration-300",
+                        "text-[9px] font-bold tracking-widest uppercase leading-none transition-colors duration-300 antialiased",
                         isPremium ? "text-indigo-300 group-hover:text-indigo-200" : "text-zinc-500 group-hover:text-zinc-300"
                     )}>
                       {isExpanded ? 'Includes' : 'View Perks'}
@@ -189,7 +182,7 @@ function Community() {
                               <div className={`mt-0.5 p-[2px] rounded-full border flex items-center justify-center flex-shrink-0 ${isPremium ? 'border-indigo-400 bg-indigo-500/10' : 'border-zinc-700'}`}>
                                 <Check className="w-2 h-2 text-white flex-shrink-0" strokeWidth={3} />
                               </div>
-                              <span className="text-xs md:text-sm text-zinc-300 font-medium tracking-[0.01em] leading-relaxed">
+                              <span className="text-xs md:text-sm text-zinc-300 font-medium tracking-[0.01em] leading-relaxed antialiased">
                                 {perk}
                               </span>
                             </motion.div>
@@ -213,7 +206,7 @@ function Community() {
                         >
                           <div className="flex items-center justify-center min-h-[20px]">
                             <span className={cn(
-                              "font-black text-[10px] tracking-[0.25em] uppercase leading-none transition-colors",
+                              "font-black text-[10px] tracking-widest uppercase leading-none transition-colors antialiased",
                               isPremium ? "text-indigo-100" : "text-white group-hover:text-indigo-200"
                             )}>
                               Join {tier.name}
@@ -242,13 +235,13 @@ function Community() {
         <PremiumGlass
           variant="default"
           intensity="heavy"
-          className="relative border-t border-white/5 py-4 px-4 pb-8 pointer-events-auto rounded-none backdrop-blur-2xl"
+          className="relative border-t border-white/5 py-4 px-4 pb-8 pointer-events-auto rounded-none isolation-isolate will-change-transform translate-z-0"
         >
-           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
+           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
            
            <div className="max-w-lg mx-auto relative z-10">
               <div className="text-center space-y-4">
-                <span className="text-[9px] font-bold text-zinc-500 tracking-[0.25em] leading-none block uppercase">
+                <span className="text-[9px] font-bold text-zinc-500 tracking-widest leading-none block uppercase antialiased">
                   Secure Checkout
                 </span>
                 <div className="flex items-center justify-center gap-5 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500 min-h-[20px]">

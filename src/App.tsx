@@ -55,7 +55,7 @@ function App() {
   const [showCommunity, setShowCommunity] = useState(false);
 
   return (
-    <div className="min-h-[100dvh] bg-neutral-950 text-white overflow-hidden font-sans selection:bg-indigo-500/30 antialiased subpixel-antialiased">
+    <div className="min-h-[100dvh] bg-neutral-950 text-white overflow-hidden font-sans selection:bg-indigo-500/30 antialiased text-rendering-geometricPrecision">
       {/* Premium background environment */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-neutral-950" />
@@ -102,9 +102,10 @@ function App() {
               />
               {/* Noise overlay - reduced opacity for subtlety */}
               <div 
-                className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none"
+                className="absolute inset-0 opacity-[0.08] pointer-events-none"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                  backgroundSize: '256px 256px'
                 }}
               />
             </motion.div>
@@ -127,7 +128,7 @@ function App() {
                                  text-5xl         
                                  sm:text-6xl      
                                  md:text-7xl      
-                                 lg:text-8xl">
+                                 lg:text-8xl antialiased">
                       <div className="overflow-hidden">
                         <motion.div variants={revealText} className="tracking-tight">KHALED</motion.div>
                       </div>
@@ -150,7 +151,7 @@ function App() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <div className="py-4 px-10 font-bold text-sm tracking-[0.2em] uppercase text-white group-hover:text-indigo-200 transition-colors duration-300 flex items-center justify-center min-h-[20px] leading-none">
+                      <div className="py-4 px-10 font-bold text-sm tracking-widest uppercase text-white group-hover:text-indigo-200 transition-colors duration-300 flex items-center justify-center min-h-[20px] leading-none antialiased">
                         <span className="leading-none">Enter Community</span>
                       </div>
                     </PremiumGlass>
@@ -159,7 +160,7 @@ function App() {
                   {/* Social Links - Smaller & Sharper */}
                   <motion.div 
                     variants={fadeInUp} 
-                    className="flex flex-wrap justify-center gap-8 md:gap-12 text-[10px] md:text-xs font-bold tracking-[0.25em] text-gray-500 leading-none"
+                    className="flex flex-wrap justify-center gap-8 md:gap-12 text-[10px] md:text-xs font-bold tracking-widest text-gray-500 leading-none antialiased"
                   >
                     {[
                       { name: 'SPOTIFY', url: 'https://open.spotify.com/artist/2XYgHUbsmab6VT4a3FF9mX' },
@@ -184,7 +185,7 @@ function App() {
               {/* Footer */}
               <motion.footer 
                 variants={fadeInUp} 
-                className="text-center text-[9px] tracking-[0.25em] text-gray-700 font-bold uppercase pb-safe leading-none"
+                className="text-center text-[9px] tracking-widest text-gray-700 font-bold uppercase pb-safe leading-none antialiased"
               >
                 © 2025 Khaled Siddiq
               </motion.footer>
