@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Community from './Community';
+import PremiumGlass from './components/ui/premium-glass';
 
 // --- Animation Constants ---
 const TRANSITION = { duration: 0.8, ease: [0.6, 0.01, 0.05, 0.9] };
@@ -54,7 +55,14 @@ function App() {
   const [showCommunity, setShowCommunity] = useState(false);
 
   return (
-    <div className="min-h-[100dvh] bg-black text-white overflow-hidden font-sans selection:bg-white selection:text-black">
+    <div className="min-h-[100dvh] bg-neutral-950 text-white overflow-hidden font-sans selection:bg-indigo-500/30 antialiased">
+      {/* Premium background environment */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-neutral-950" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_120%_at_50%_120%,rgba(120,119,198,0.2),rgba(255,255,255,0))]" />
+      </div>
+
       <AnimatePresence mode="wait">
         {showCommunity ? (
           <motion.div
@@ -133,23 +141,25 @@ function App() {
 
                   {/* Sharper Button */}
                   <motion.div variants={fadeInUp} className="w-full flex justify-center">
-                    <motion.button
+                    <PremiumGlass
+                      variant="card"
+                      intensity="medium"
+                      glow={true}
+                      className="group cursor-pointer"
                       onClick={() => setShowCommunity(true)}
-                      whileHover={{ scale: 1.02, backgroundColor: "#ffffff" }}
+                      whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      transition={{ type: "tween", duration: 0.2 }}
-                      className="group bg-white/90 backdrop-blur-sm text-black py-4 px-10
-                                 font-bold text-sm tracking-[0.2em] 
-                                 hover:bg-white transition-all duration-300 uppercase shadow-2xl shadow-black/50"
                     >
-                      Enter Community
-                    </motion.button>
+                      <div className="py-4 px-10 font-bold text-sm tracking-[0.2em] uppercase text-white group-hover:text-indigo-200 transition-colors duration-300">
+                        Enter Community
+                      </div>
+                    </PremiumGlass>
                   </motion.div>
 
                   {/* Social Links - Smaller & Sharper */}
                   <motion.div 
                     variants={fadeInUp} 
-                    className="flex flex-wrap justify-center gap-8 md:gap-12 text-[10px] md:text-xs font-bold tracking-[0.25em] text-gray-400"
+                    className="flex flex-wrap justify-center gap-8 md:gap-12 text-[10px] md:text-xs font-bold tracking-[0.25em] text-gray-500"
                   >
                     {[
                       { name: 'SPOTIFY', url: 'https://open.spotify.com/artist/2XYgHUbsmab6VT4a3FF9mX' },
@@ -162,7 +172,7 @@ function App() {
                         target="_blank"
                         rel="noopener noreferrer"
                         whileHover={{ y: -2, color: "#ffffff" }}
-                        className="hover:text-white transition-colors inline-block border-b border-transparent hover:border-white/50 pb-0.5"
+                        className="hover:text-indigo-300 transition-colors inline-block border-b border-transparent hover:border-indigo-400/50 pb-0.5"
                       >
                         {link.name}
                       </motion.a>
@@ -174,7 +184,7 @@ function App() {
               {/* Footer */}
               <motion.footer 
                 variants={fadeInUp} 
-                className="text-center text-[9px] tracking-[0.3em] text-gray-600 font-bold uppercase pb-safe"
+                className="text-center text-[9px] tracking-[0.3em] text-gray-700 font-bold uppercase pb-safe"
               >
                 © 2025 Khaled Siddiq
               </motion.footer>
