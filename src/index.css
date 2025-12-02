@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap&text=KHALEDSIDDIQ') preload;
 
 @tailwind base;
 @tailwind components;
@@ -9,5 +9,12 @@
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-display: swap;
+  }
+  
+  /* Preload critical fonts */
+  @font-face {
+    font-family: 'Helvetica Neue';
+    font-display: swap;
   }
 }

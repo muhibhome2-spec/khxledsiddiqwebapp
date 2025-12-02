@@ -41,32 +41,6 @@ interface LandingPageProps {
 }
 
 export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
-  // --- Mouse Movement Logic for Parallax & Spotlight ---
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  // Smooth out the mouse values for that "heavy/premium" feel
-  const smoothX = useSpring(mouseX, { damping: 50, stiffness: 400 });
-  const smoothY = useSpring(mouseY, { damping: 50, stiffness: 400 });
-
-  // Parallax transform for background (moves opposite to mouse)
-  const x = useTransform(smoothX, [0, 1], [-20, 20]);
-  const y = useTransform(smoothY, [0, 1], [-20, 20]);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      // Normalize mouse position from -1 to 1
-      mouseX.set((e.clientX / window.innerWidth) * 2 - 1);
-      mouseY.set((e.clientY / window.innerHeight) * 2 - 1);
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
-
-  // Spotlight gradient position calculations
-  const spotX = useTransform(smoothX, [-1, 1], ["0%", "100%"]);
-  const spotY = useTransform(smoothY, [-1, 1], ["0%", "100%"]);
-
   return (
     <motion.div
       className="relative min-h-[100dvh] flex flex-col perspective-1000"
@@ -74,30 +48,16 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       initial="hidden"
       animate="show"
     >
-      {/* --- Dynamic Spotlight --- */}
-      <motion.div 
-        className="absolute inset-0 z-10 opacity-40 mix-blend-soft-light pointer-events-none"
-        style={{
-          background: useTransform(
-            [spotX, spotY],
-            ([latestX, latestY]) => `radial-gradient(circle 800px at ${latestX} ${latestY}, rgba(120, 119, 198, 0.25), transparent 80%)`
-          )
-        }}
-      />
-
-      {/* --- Parallax Background Image --- */}
-      <motion.div 
-        className="fixed inset-0 -z-10"
-        style={{ x, y, scale: 1.15 }}
-      >
+      {/* --- Static Background Image --- */}
+      <div className="fixed inset-0 -z-10">
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat w-full h-full will-change-transform opacity-60"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-60 grayscale"
           style={{
             backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
           }}
         />
         <div className="absolute inset-0 bg-black/40" />
-      </motion.div>
+      </div>
 
       {/* --- Heavy Vignette for Focus --- */}
       <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] pointer-events-none" />

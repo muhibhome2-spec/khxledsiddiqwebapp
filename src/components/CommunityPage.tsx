@@ -57,7 +57,7 @@ interface Tier {
 const tiers: Tier[] = [
   {
     id: 'hear-it-first',
-    name: 'hear it first',
+    name: 'Hear It First',
     price: '£3.99',
     theme: 'blue_glass',
     icon: Music,
@@ -68,7 +68,7 @@ const tiers: Tier[] = [
   },
   {
     id: 'see-it-first',
-    name: 'see it first',
+    name: 'See It First',
     price: '£7.99',
     theme: 'amethyst_glass',
     icon: Video,
@@ -80,7 +80,7 @@ const tiers: Tier[] = [
   },
   {
     id: 'feel-it-first',
-    name: 'feel it first',
+    name: 'Feel It First',
     price: '£10.99',
     theme: 'gold_glass',
     icon: Heart,
@@ -218,7 +218,7 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
                           </div>
                           
                           <div>
-                            <h2 className={`text-xl font-bold tracking-tight transition-colors duration-300 ${
+                            <h2 className={`text-xl font-bold tracking-tight transition-colors duration-300 lowercase ${
                               isExpanded ? "text-white" : "text-zinc-300"
                             }`} style={{ fontVariantCaps: 'small-caps' }}>
                               {tier.name}
@@ -279,7 +279,7 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
                                 style={{ fontVariantCaps: 'small-caps' }}
                               >
                                 {isPremium && <Sparkles className="absolute top-1 right-1 w-20 h-20 text-amber-500/5 -rotate-12 pointer-events-none" />}
-                                <span>join {tier.name}</span>
+                                <span className="lowercase">join {tier.name.toLowerCase()}</span>
                               </motion.button>
                             </div>
                           </motion.div>
