@@ -52,33 +52,33 @@ function Community() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 selection:bg-white/20 font-sans antialiased subpixel-antialiased overflow-hidden relative">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-white/20 font-sans antialiased subpixel-antialiased overflow-hidden relative">
       
       {/* --- VIP "Brushed Titanium" + "Studio Light" Environment --- */}
       <div className="fixed inset-0 -z-10">
         
-        {/* 1. Base Layer: Deep Zinc/Black Metal */}
-        <div className="absolute inset-0 bg-neutral-950" />
+        {/* 1. Base Layer: LIFTED from black to Zinc Gradient for visibility */}
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-black" />
         
-        {/* 2. The "Sheen": An animated, rotating conic gradient for liquid metal feel */}
+        {/* 2. The "Sheen": Increased opacity for visible liquid metal feel */}
         <motion.div 
             animate={{ rotate: 360 }}
             transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] opacity-[0.05] pointer-events-none"
+            className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] opacity-[0.15] pointer-events-none"
             style={{
                 background: 'conic-gradient(from 0deg at 50% 50%, #000000 0deg, #FFFFFF 180deg, #000000 360deg)',
                 filter: 'blur(80px)',
             }}
         />
 
-        {/* 3. STUDIO KEY LIGHT: Sharp, top-down white light (Softbox effect) */}
-        <div className="absolute inset-x-0 top-[-20%] h-[70%] bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12),transparent_70%)] blur-[80px] pointer-events-none mix-blend-screen" />
+        {/* 3. STUDIO KEY LIGHT: Boosted Intensity */}
+        <div className="absolute inset-x-0 top-[-20%] h-[70%] bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.2),transparent_70%)] blur-[80px] pointer-events-none mix-blend-screen" />
         
-        {/* 4. STUDIO RIM LIGHT: Subtle Indigo/Violet from bottom-right for 3D depth */}
-        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-[radial-gradient(circle,rgba(79,70,229,0.08),transparent_70%)] blur-[60px] pointer-events-none mix-blend-screen" />
+        {/* 4. STUDIO RIM LIGHT: Boosted Intensity */}
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-[radial-gradient(circle,rgba(79,70,229,0.15),transparent_70%)] blur-[60px] pointer-events-none mix-blend-screen" />
 
-        {/* 5. Heavy Grain Texture: Essential for the "Physical" feel */}
-        <div className="absolute inset-0 opacity-[0.07] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+        {/* 5. Heavy Grain Texture: Increased for physical feel */}
+        <div className="absolute inset-0 opacity-[0.12] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
         
         {/* 6. Vignette to focus eyes on center */}
         <div className="absolute inset-0 bg-[radial-gradient(transparent_45%,#000000_100%)] pointer-events-none" />
