@@ -155,21 +155,21 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
         >
           <div className="inline-flex items-center justify-center gap-4 mb-6 opacity-60">
             <div className="h-px w-8 bg-gradient-to-r from-transparent via-zinc-500 to-transparent" />
-            <span className="text-[9px] tracking-[0.35em] font-medium text-zinc-500 uppercase">
+            <span className="text-[9px] tracking-[0.35em] font-medium text-zinc-500" style={{ fontVariantCaps: 'small-caps' }}>
               khaled siddiq
             </span>
             <div className="h-px w-8 bg-gradient-to-r from-transparent via-zinc-500 to-transparent" />
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-black tracking-tighter leading-[0.85] mb-6 text-white mix-blend-screen">
+          <h1 className="text-5xl md:text-6xl font-black tracking-tighter leading-[0.85] mb-6 text-white mix-blend-screen" style={{ fontVariantCaps: 'small-caps' }}>
             join the<br />
-            <span className="text-white/30 blur-[1px] absolute ml-1 mt-1 select-none -z-10 lowercase">community</span>
-            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-zinc-200 to-zinc-600 lowercase">
+            <span className="text-white/30 blur-[1px] absolute ml-1 mt-1 select-none -z-10">community</span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-zinc-200 to-zinc-600">
               community
             </span>
           </h1>
 
-          <p className="text-xs md:text-sm text-zinc-500 leading-relaxed max-w-[280px] mx-auto font-normal lowercase tracking-wide">
+          <p className="text-xs md:text-sm text-zinc-500 leading-relaxed max-w-[280px] mx-auto font-normal tracking-wide" style={{ fontVariantCaps: 'small-caps' }}>
             get closer to the music, the journey, and the soul behind it all.
           </p>
         </motion.header>
@@ -190,8 +190,169 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
                 transition={{ duration: 0.5, delay: index * 0.08, ease: EASE }}
                 className="relative group"
               >
-                {/* DYNAMIC GLOW LAYER 
-                   This sits behind the glass card and provides the "premium" colored lighting 
-                */}
+                {/* DYNAMIC GLOW LAYER */}
                 <div 
-                  className="
+                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl -z-10"
+                  style={{
+                    background: `radial-gradient(circle at center, ${theme.glowColor} 0%, transparent 70%)`,
+                    transform: 'scale(1.1)',
+                  }}
+                />
+
+                <PremiumGlass
+                  className={`
+                    relative overflow-hidden rounded-2xl border ${theme.border}
+                    bg-gradient-to-br ${theme.gradient}
+                    backdrop-blur-xl backdrop-saturate-150
+                    transition-all duration-500 ease-out
+                    hover:scale-[1.02] hover:shadow-2xl
+                    ${isExpanded ? 'shadow-2xl scale-[1.01]' : ''}
+                  `}
+                >
+                  {/* Premium Badge for Gold Tier */}
+                  {isPremium && (
+                    <div className="absolute top-4 right-4 z-20">
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 backdrop-blur-sm">
+                        <Sparkles size={10} className="text-amber-400" />
+                        <span className="text-[9px] font-medium text-amber-200 tracking-wider" style={{ fontVariantCaps: 'small-caps' }}>
+                          premium
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Main Content */}
+                  <div className="p-6">
+                    {/* Header Row */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2.5 rounded-xl ${theme.accent}/20 border border-current/20`}>
+                          <Icon size={18} className={theme.icon} />
+                        </div>
+                        <div>
+                          <h3 className={`text-lg font-bold ${theme.text} tracking-tight`} style={{ textTransform: 'lowercase' }}>
+                            {tier.name}
+                          </h3>
+                        </div>
+                      </div>
+                      
+                      <div className="text-right">
+                        <div className={`text-2xl font-black ${theme.text}`}>
+                          {tier.price}
+                        </div>
+                        <div className="text-[10px] text-zinc-500 tracking-wider -mt-1" style={{ fontVariantCaps: 'small-caps' }}>
+                          /mo
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Toggle Button */}
+                    <button
+                      onClick={() => toggleTier(tier.id)}
+                      className={`
+                        w-full flex items-center justify-between p-3 rounded-xl
+                        border ${theme.button}
+                        transition-all duration-300 group/toggle
+                        hover:scale-[1.02] active:scale-[0.98]
+                      `}
+                    >
+                      <span className="text-xs font-medium tracking-wider" style={{ fontVariantCaps: 'small-caps' }}>
+                        {isExpanded ? 'includes' : 'view perks'}
+                      </span>
+                      <motion.div
+                        animate={{ rotate: isExpanded ? 180 : 0 }}
+                        transition={{ duration: 0.3, ease: EASE }}
+                      >
+                        <ChevronDown size={14} className="opacity-60 group-hover/toggle:opacity-100 transition-opacity" />
+                      </motion.div>
+                    </button>
+
+                    {/* Expanded Content */}
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.4, ease: EASE }}
+                          className="overflow-hidden"
+                        >
+                          <div className="pt-4 space-y-3">
+                            {tier.perks.map((perk, perkIndex) => (
+                              <motion.div
+                                key={perkIndex}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.3, delay: perkIndex * 0.05 }}
+                                className="flex items-start gap-3"
+                              >
+                                <div className={`mt-1 p-1 rounded-full ${theme.accent}/20`}>
+                                  <Check size={10} className={theme.icon} />
+                                </div>
+                                <span className="text-xs text-zinc-300 leading-relaxed font-normal" style={{ fontVariantCaps: 'small-caps' }}>
+                                  {perk}
+                                </span>
+                              </motion.div>
+                            ))}
+
+                            {/* Join Button */}
+                            <motion.button
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.4, delay: 0.2 }}
+                              className={`
+                                w-full mt-6 py-3.5 px-6 rounded-xl font-semibold text-sm
+                                ${theme.accent} text-black
+                                hover:scale-[1.02] active:scale-[0.98]
+                                transition-all duration-200
+                                shadow-lg hover:shadow-xl
+                              `}
+                              style={{ fontVariantCaps: 'small-caps' }}
+                            >
+                              join {tier.name}
+                            </motion.button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </PremiumGlass>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+
+        {/* Bottom CTA Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4, ease: EASE }}
+          className="fixed bottom-0 left-0 right-0 p-5 bg-black/80 backdrop-blur-xl border-t border-zinc-800/50"
+        >
+          <div className="max-w-md mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-zinc-800/50 border border-zinc-700/50">
+                <CreditCard size={16} className="text-zinc-400" />
+              </div>
+              <div>
+                <div className="text-xs font-medium text-zinc-300" style={{ fontVariantCaps: 'small-caps' }}>
+                  secure checkout
+                </div>
+                <div className="text-[10px] text-zinc-500" style={{ fontVariantCaps: 'small-caps' }}>
+                  powered by stripe
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 text-zinc-500">
+              <Wallet size={14} />
+              <span className="text-[10px] tracking-wider" style={{ fontVariantCaps: 'small-caps' }}>
+                cancel anytime
+              </span>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
