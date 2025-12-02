@@ -115,5 +115,33 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
           <div className="w-full text-center relative">
             
             {/* The Typography - Helvetica, Bold, Tight */}
+            <div className="overflow-hidden mb-8">
+              <motion.h1 
+                variants={titleReveal}
+                className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[0.85] text-white"
+              >
+                khaled siddiq
+              </motion.h1>
+            </div>
+
+            <motion.p 
+              variants={fadeInSlow}
+              className="text-lg md:text-xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed"
+            >
+              artist & creative director
+            </motion.p>
+
+            <motion.button
+              variants={fadeInSlow}
+              onClick={onEnterCommunity}
+              className="group relative px-8 py-4 text-sm tracking-[0.2em] uppercase font-medium text-white border border-white/20 hover:border-white/40 transition-all duration-500 hover:bg-white/5"
+            >
+              <span className="relative z-10">enter community</span>
+              <div className="absolute inset-0 bg-white/5 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+            </motion.button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
   )
 }
