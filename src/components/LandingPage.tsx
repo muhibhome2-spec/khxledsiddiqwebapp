@@ -48,6 +48,19 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       initial="hidden"
       animate="show"
     >
+      {/* --- Background Image --- */}
+      <div className="fixed inset-0 -z-10">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat w-full h-full scale-[1.02]"
+          style={{
+            backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
+            opacity: 0.75,
+            filter: 'grayscale(100%)'
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60" />
+      </div>
+
       {/* --- Static Background Image --- */}
       <div className="fixed inset-0 -z-10">
         <div 
