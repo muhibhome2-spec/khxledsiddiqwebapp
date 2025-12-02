@@ -9,19 +9,15 @@ interface Tier {
   name: string;
   price: string;
   perks: string[];
-  accent: string;     
-  glowColor: string;  
-  highlight: string;  
+  theme: 'blue_glass' | 'amethyst_glass' | 'gold_glass';
 }
 
 const tiers: Tier[] = [
   {
     id: 'hear-it-first',
-    name: 'hear it first',
+    name: 'Hear It First',
     price: '£3.99',
-    accent: 'bg-zinc-500',
-    glowColor: 'rgba(113, 113, 122, 0.2)', 
-    highlight: 'ring-zinc-700',
+    theme: 'blue_glass',
     perks: [
       'Get access to songs before they drop',
       'Exclusive access to the community group',
@@ -29,18 +25,54 @@ const tiers: Tier[] = [
   },
   {
     id: 'see-it-first',
-    name: 'see it first',
+    name: 'See It First',
     price: '£7.99',
-    accent: 'bg-violet-400',
-    glowColor: 'rgba(139, 92, 246, 0.3)', 
-    highlight: 'ring-violet-900/50',
+    theme: 'amethyst_glass',
     perks: [
       'All "Hear it First" benefits',
       'Watch the vlog before anyone else',
       'Behind the scenes photo dump',
     ],
   },
+  {
+    id: 'feel-it-first',
+    name: 'Feel It First',
+    price: '£10.99',
+    theme: 'gold_glass',
+    perks: [
+      'All previous benefits',
+      '1 Private Q&A',
+      'Heads up before tour dates',
+    ],
+  },
 ];
+
+const themeConfig = {
+  blue_glass: {
+    accent: 'bg-blue-500',
+    glow: 'rgba(59, 130, 246, 0.2)',
+    border: 'border-blue-400/20',
+    gradient: 'from-blue-500/10 to-blue-900/5',
+    text: 'text-blue-300',
+    hoverText: 'group-hover:text-blue-200',
+  },
+  amethyst_glass: {
+    accent: 'bg-purple-500',
+    glow: 'rgba(168, 85, 247, 0.2)',
+    border: 'border-purple-400/20',
+    gradient: 'from-purple-500/10 to-purple-900/5',
+    text: 'text-purple-300',
+    hoverText: 'group-hover:text-purple-200',
+  },
+  gold_glass: {
+    accent: 'bg-amber-400',
+    glow: 'rgba(251, 191, 36, 0.15)',
+    border: 'border-amber-300/30',
+    gradient: 'from-amber-400/10 to-amber-900/5',
+    text: 'text-amber-200',
+    hoverText: 'group-hover:text-amber-100',
+  },
+};
 
 const EASE = [0.6, 0.01, 0.05, 0.9];
 
@@ -53,13 +85,13 @@ function Community() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-zinc-100 selection:bg-indigo-500/30 font-sans antialiased text-rendering-geometricPrecision">
-      {/* --- Premium Background Environment --- */}
+      {/* --- Optimized Static Background Environment --- */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-neutral-950" />
-        {/* Static mesh gradient background - no animation */}
+        {/* Static mesh gradient background - no animation for 60fps */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_120%_at_50%_120%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
-        {/* High-contrast noise vignette */}
+        {/* High-contrast noise vignette - optimized for performance */}
         <div className="absolute inset-0 opacity-[0.08]" 
              style={{
                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
@@ -102,7 +134,8 @@ function Community() {
         <motion.div className="space-y-4 relative z-10">
           {tiers.map((tier, index) => {
             const isExpanded = expandedTier === tier.id;
-            const isPremium = tier.id === 'see-it-first';
+            const theme = themeConfig[tier.theme];
+            const isPremium = tier.theme === 'gold_glass';
 
             return (
               <PremiumGlass
@@ -115,12 +148,25 @@ function Community() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1, ease: EASE }}
+                style={{
+                  boxShadow: isExpanded ? `0 0 40px -12px ${theme.glow}` : undefined,
+                }}
               >
+                {/* Themed gradient overlay */}
+                <div className={cn(
+                  "absolute inset-0 bg-gradient-to-b opacity-50 rounded-[inherit]",
+                  theme.gradient
+                )} />
+                
+                {/* Themed border enhancement */}
+                <div className={cn(
+                  "absolute inset-0 rounded-[inherit] border",
+                  theme.border
+                )} />
+
                 <motion.button
                   onClick={() => toggleTier(tier.id)}
                   className="w-full text-left p-6 md:p-7 relative z-20 min-h-[44px] flex flex-col justify-center"
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
                   <motion.div layout="position" className="flex items-center justify-between gap-4">
@@ -128,9 +174,15 @@ function Community() {
                       <div className="flex items-center gap-4 mb-2">
                         <motion.div 
                           layout
-                          className={`w-0.5 h-6 ${tier.accent} shadow-[0_0_12px_currentColor] rounded-full`} 
+                          className={cn(
+                            "w-0.5 h-6 shadow-[0_0_12px_currentColor] rounded-full",
+                            theme.accent
+                          )} 
                         />
-                        <h2 className="text-xl md:text-2xl font-black tracking-tighter leading-none text-white group-hover:text-indigo-100 transition-colors antialiased">
+                        <h2 className={cn(
+                          "text-xl md:text-2xl font-black tracking-tighter leading-none text-white transition-colors antialiased",
+                          theme.hoverText
+                        )}>
                           {tier.name}
                         </h2>
                       </div>
@@ -144,7 +196,7 @@ function Community() {
                   <motion.div layout="position" className="flex items-center justify-between mt-4">
                     <span className={cn(
                         "text-[9px] font-bold tracking-widest uppercase leading-none transition-colors duration-300 antialiased",
-                        isPremium ? "text-indigo-300 group-hover:text-indigo-200" : "text-zinc-500 group-hover:text-zinc-300"
+                        isPremium ? theme.text : "text-zinc-500 group-hover:text-zinc-300"
                     )}>
                       {isExpanded ? 'Includes' : 'View Perks'}
                     </span>
@@ -155,7 +207,7 @@ function Community() {
                     >
                       <ChevronDown className={cn(
                           "w-3.5 h-3.5 transition-colors flex-shrink-0",
-                          isPremium ? "text-indigo-400" : "text-zinc-600"
+                          isPremium ? theme.text : "text-zinc-600"
                       )} />
                     </motion.div>
                   </motion.div>
@@ -179,7 +231,10 @@ function Community() {
                               transition={{ duration: 0.3, delay: i * 0.05 }}
                               className="flex items-start gap-3 min-h-[20px]"
                             >
-                              <div className={`mt-0.5 p-[2px] rounded-full border flex items-center justify-center flex-shrink-0 ${isPremium ? 'border-indigo-400 bg-indigo-500/10' : 'border-zinc-700'}`}>
+                              <div className={cn(
+                                "mt-0.5 p-[2px] rounded-full border flex items-center justify-center flex-shrink-0",
+                                isPremium ? `border-amber-400 bg-amber-500/10` : 'border-zinc-700'
+                              )}>
                                 <Check className="w-2 h-2 text-white flex-shrink-0" strokeWidth={3} />
                               </div>
                               <span className="text-xs md:text-sm text-zinc-300 font-medium tracking-[0.01em] leading-relaxed antialiased">
@@ -199,15 +254,19 @@ function Community() {
                           glow={isPremium}
                           className={cn(
                             "w-full mt-8 py-4 cursor-pointer group relative overflow-hidden",
-                            isPremium ? "bg-indigo-600/20 hover:bg-indigo-600/30 border-indigo-500/30" : "hover:bg-white/5"
+                            isPremium ? "bg-amber-600/20 hover:bg-amber-600/30 border-amber-500/30" : "hover:bg-white/5"
                           )}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
                         >
-                          <div className="flex items-center justify-center min-h-[20px]">
+                          {/* Themed button gradient */}
+                          <div className={cn(
+                            "absolute inset-0 bg-gradient-to-b opacity-30 rounded-[inherit]",
+                            theme.gradient
+                          )} />
+                          
+                          <div className="flex items-center justify-center min-h-[20px] relative z-10">
                             <span className={cn(
                               "font-black text-[10px] tracking-widest uppercase leading-none transition-colors antialiased",
-                              isPremium ? "text-indigo-100" : "text-white group-hover:text-indigo-200"
+                              isPremium ? theme.text : "text-white group-hover:text-indigo-200"
                             )}>
                               Join {tier.name}
                             </span>

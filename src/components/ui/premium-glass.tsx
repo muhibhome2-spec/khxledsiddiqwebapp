@@ -1,6 +1,6 @@
 import { ReactNode, forwardRef } from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 
 interface PremiumGlassProps extends Omit<HTMLMotionProps<"div">, 'children'> {
   children: ReactNode;
@@ -32,9 +32,9 @@ const PremiumGlass = forwardRef<HTMLDivElement, PremiumGlassProps>(
     };
 
     const intensityClasses = {
-      light: "bg-gradient-to-b from-white/[0.06] to-transparent border-white/[0.06]",
+      light: "bg-gradient-to-b from-white/[0.06] to-transparent border-white/[0.08]",
       medium: "bg-gradient-to-b from-white/[0.08] to-transparent border-white/[0.08]", 
-      heavy: "bg-gradient-to-b from-white/[0.12] to-transparent border-white/[0.12]"
+      heavy: "bg-gradient-to-b from-white/[0.12] to-transparent border-white/[0.08]"
     };
 
     const glowClasses = glow 
@@ -55,25 +55,26 @@ const PremiumGlass = forwardRef<HTMLDivElement, PremiumGlassProps>(
         )}
         {...props}
       >
-        {/* Specular highlight - the signature frosted glass top edge */}
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]" />
+        {/* Specular highlight - the signature frosted glass top edge with inset shadow */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" 
+             style={{ boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.2)' }} />
         
         {/* Subtle inner glow on hover */}
         <div className="absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent" />
         
-        {/* High-quality noise texture overlay INSIDE the card */}
+        {/* High-quality noise texture overlay INSIDE the card - 4% opacity */}
         {noise && (
           <div 
-            className="absolute inset-0 opacity-[0.04] pointer-events-none rounded-[inherit]"
+            className="absolute inset-0 opacity-[0.04] pointer-events-none rounded-[inherit] mix-blend-overlay"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.0' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
               backgroundSize: '128px 128px'
             }}
           />
         )}
         
         {/* Content */}
-        <div className="relative z-10">
+        <div className="relative z-20">
           {children}
         </div>
       </Component>
