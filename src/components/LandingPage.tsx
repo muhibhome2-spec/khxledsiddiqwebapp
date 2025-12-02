@@ -114,4 +114,4 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
         <div className="flex-1 flex flex-col items-center justify-center w-full min-h-[60vh]">
           <div className="w-full text-center relative">
             
-            {/* The Typography - Helvetica, Bold, Tight
+            {/* The Typography - Helvetica, Bold, Tight */}
