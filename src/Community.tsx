@@ -2,15 +2,16 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronDown } from 'lucide-react';
 import PremiumGlass from './components/ui/premium-glass';
+import { cn } from '@/lib/utils'; // Assuming you set this up as per previous instructions
 
 interface Tier {
   id: string;
   name: string;
   price: string;
   perks: string[];
-  accent: string;
-  gradient: string;
-  highlight: string;
+  accent: string;     // Tailwind class for dot color
+  glowColor: string;  // Hex/RGB for the radial gradient
+  highlight: string;  // Ring color
 }
 
 const tiers: Tier[] = [
@@ -19,8 +20,7 @@ const tiers: Tier[] = [
     name: 'hear it first',
     price: '£3.99',
     accent: 'bg-zinc-500',
-    // Sharper Industrial Gradient
-    gradient: 'from-zinc-900 via-zinc-800/80 to-black',
+    glowColor: 'rgba(113, 113, 122, 0.2)', // Zinc glow
     highlight: 'ring-zinc-700',
     perks: [
       'Get access to songs before they drop',
@@ -32,8 +32,7 @@ const tiers: Tier[] = [
     name: 'see it first',
     price: '£7.99',
     accent: 'bg-violet-400',
-    // Deeper, darker Amethyst
-    gradient: 'from-black via-[#1a0b2e] to-black', 
+    glowColor: 'rgba(139, 92, 246, 0.3)', // Violet glow
     highlight: 'ring-violet-900/50',
     perks: [
       'All "Hear it First" benefits',
@@ -54,11 +53,13 @@ function Community() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-zinc-100 selection:bg-indigo-500/30 font-sans antialiased">
-      {/* Premium background environment */}
+      {/* --- Premium Background Environment --- */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-neutral-950" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_120%_at_50%_120%,rgba(120,119,198,0.2),rgba(255,255,255,0))]" />
+        {/* Optional: Subtle Noise Overlay for texture */}
+        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
       </div>
 
       <div className="px-6 py-12 pb-44 max-w-lg mx-auto">
@@ -68,11 +69,11 @@ function Community() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: EASE }}
-          className="mb-10 text-center md:text-left"
+          className="mb-10 text-center md:text-left relative z-10"
         >
           <div className="inline-flex md:flex items-center gap-3 mb-6 opacity-70">
             <div className="h-px w-8 bg-white/50 hidden md:block" />
-            <span className="text-[9px] md:text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase">
+            <span className="text-[9px] md:text-10px tracking-[0.3em] font-bold text-zinc-400 uppercase">
               Khaled Siddiq
             </span>
             <div className="h-px w-8 bg-white/50 md:hidden" />
@@ -80,7 +81,11 @@ function Community() {
 
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.9] mb-4 text-white">
             JOIN THE<br />
-            <span className="text-zinc-600">COMMUNITY</span>
+            {/* UPDATED: Gradient Text with 'Carved' top highlight */}
+            <span className="inline-block relative text-transparent bg-clip-text bg-gradient-to-b from-indigo-300 via-indigo-400 to-indigo-600">
+              COMMUNITY
+              <div className="absolute top-0 left-0 w-full h-[1px] bg-white/30 blur-[1px] mix-blend-overlay" />
+            </span>
           </h1>
 
           <p className="text-xs md:text-sm text-zinc-400 leading-relaxed max-w-xs font-medium tracking-wide mx-auto md:mx-0">
@@ -89,7 +94,7 @@ function Community() {
         </motion.header>
 
         {/* --- Tiers List --- */}
-        <motion.div className="space-y-4">
+        <motion.div className="space-y-4 relative z-10">
           {tiers.map((tier, index) => {
             const isExpanded = expandedTier === tier.id;
             const isPremium = tier.id === 'see-it-first';
@@ -101,25 +106,42 @@ function Community() {
                 key={tier.id}
                 variant="card"
                 intensity={isPremium ? "heavy" : "medium"}
-                glow={isPremium}
-                className="cursor-pointer"
+                // UPDATED: Dynamic shadow and conditional border glow
+                className={cn(
+                  "cursor-pointer group relative overflow-hidden",
+                  isPremium ? "shadow-indigo-500/20 shadow-2xl border-indigo-500/20" : "shadow-xl"
+                )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1, ease: EASE }}
               >
+                {/* UPDATED: Background Radial Glow for Premium feel */}
+                <motion.div 
+                    className="absolute inset-0 -z-10 transition-opacity duration-500"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    animate={{ opacity: isExpanded ? 0.6 : 0 }}
+                    style={{
+                      background: `radial-gradient(600px circle at 50% 50%, ${tier.glowColor}, transparent 40%)`
+                    }}
+                />
 
-                <button
+                <motion.button
                   onClick={() => toggleTier(tier.id)}
-                  className="w-full text-left p-6 md:p-7 group"
+                  className="w-full text-left p-6 md:p-7 relative z-20"
+                  // UPDATED: Spring Physics for physical feel
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
                   <motion.div layout="position" className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-4 mb-1">
                         <motion.div 
                           layout
-                          className={`w-0.5 h-6 ${tier.accent} shadow-[0_0_10px_currentColor]`} 
+                          className={`w-0.5 h-6 ${tier.accent} shadow-[0_0_12px_currentColor] rounded-full`} 
                         />
-                        <h2 className="text-xl md:text-2xl font-black tracking-tighter text-white group-hover:text-indigo-200 transition-colors">
+                        <h2 className="text-xl md:text-2xl font-black tracking-tighter text-white group-hover:text-indigo-100 transition-colors">
                           {tier.name}
                         </h2>
                       </div>
@@ -131,17 +153,23 @@ function Community() {
                   </motion.div>
 
                   <motion.div layout="position" className="flex items-center justify-between mt-5">
-                    <span className="text-[9px] text-zinc-500 font-bold tracking-[0.25em] uppercase group-hover:text-indigo-400 transition-colors">
+                    <span className={cn(
+                        "text-[9px] font-bold tracking-[0.25em] uppercase transition-colors duration-300",
+                        isPremium ? "text-indigo-300 group-hover:text-indigo-200" : "text-zinc-500 group-hover:text-zinc-300"
+                    )}>
                       {isExpanded ? 'Includes' : 'View Perks'}
                     </span>
                     <motion.div
                       animate={{ rotate: isExpanded ? 180 : 0 }}
                       transition={{ duration: 0.4, ease: EASE }}
                     >
-                      <ChevronDown className="w-3.5 h-3.5 text-zinc-600 group-hover:text-indigo-300 transition-colors" />
+                      <ChevronDown className={cn(
+                          "w-3.5 h-3.5 transition-colors",
+                          isPremium ? "text-indigo-400" : "text-zinc-600"
+                      )} />
                     </motion.div>
                   </motion.div>
-                </button>
+                </motion.button>
 
                 {/* --- Expanded Content --- */}
                 <AnimatePresence>
@@ -152,7 +180,7 @@ function Community() {
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.4, ease: EASE }}
                     >
-                      <div className="px-6 pb-6 md:px-7 border-t border-white/5 pt-5">
+                      <div className="px-6 pb-6 md:px-7 border-t border-white/5 pt-5 relative z-20">
                         <div className="space-y-3">
                           {tier.perks.map((perk, i) => (
                             <motion.div
@@ -162,7 +190,7 @@ function Community() {
                               transition={{ duration: 0.3, delay: i * 0.05 }}
                               className="flex items-start gap-3"
                             >
-                              <div className={`mt-1 p-[2px] rounded-full border ${isPremium ? 'border-indigo-500/50' : 'border-zinc-700'}`}>
+                              <div className={`mt-1 p-[2px] rounded-full border ${isPremium ? 'border-indigo-400 bg-indigo-500/10' : 'border-zinc-700'}`}>
                                 <Check className="w-2 h-2 text-white" />
                               </div>
                               <span className="text-xs md:text-sm text-zinc-300 font-medium tracking-wide">
@@ -179,12 +207,18 @@ function Community() {
                           transition={{ delay: 0.1, duration: 0.4 }}
                           variant="card"
                           intensity="light"
-                          glow={true}
-                          className="w-full mt-8 py-4 cursor-pointer group"
-                          whileHover={{ scale: 1.01 }}
-                          whileTap={{ scale: 0.99 }}
+                          glow={isPremium} // Pass glow prop if your component handles it
+                          className={cn(
+                            "w-full mt-8 py-4 cursor-pointer group relative overflow-hidden",
+                            isPremium ? "bg-indigo-600/20 hover:bg-indigo-600/30 border-indigo-500/30" : "hover:bg-white/5"
+                          )}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
-                          <span className="font-black text-[10px] tracking-[0.25em] text-white uppercase group-hover:text-indigo-200 transition-colors">
+                          <span className={cn(
+                              "font-black text-[10px] tracking-[0.25em] uppercase transition-colors",
+                              isPremium ? "text-indigo-100" : "text-white group-hover:text-indigo-200"
+                          )}>
                             Join {tier.name}
                           </span>
                         </PremiumGlass>
@@ -206,12 +240,16 @@ function Community() {
         className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none"
       >
         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/90 to-transparent h-32" />
+        
         <PremiumGlass
           variant="default"
           intensity="heavy"
-          className="relative border-t border-white/5 p-4 pb-8 pointer-events-auto rounded-none"
+          className="relative border-t border-white/5 p-4 pb-8 pointer-events-auto rounded-none backdrop-blur-2xl"
         >
-           <div className="max-w-lg mx-auto">
+           {/* UPDATED: Top light border for 3D Floating Effect */}
+           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
+           
+           <div className="max-w-lg mx-auto relative z-10">
               <div className="text-center space-y-3">
                 <span className="text-[9px] font-bold text-zinc-500 tracking-[0.25em] block uppercase">
                   Secure Checkout
