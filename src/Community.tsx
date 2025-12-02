@@ -125,7 +125,7 @@ function Community() {
             </span>
           </h1>
 
-          <p className="text-xs md:text-sm text-zinc-400 leading-[1.5] max-w-xs font-medium tracking-[0.01em] mx-auto md:mx-0 antialiased">
+          <p className="text-xs md:text-sm text-zinc-400 leading-[1.5] max-w-xs font-medium tracking-[0.01em] mx-auto md:mx-0 antialiased" style={{ fontVariantCaps: 'small-caps' }}>
             Get closer to the music, the journey, and the soul behind it all.
           </p>
         </motion.header>
@@ -182,22 +182,22 @@ function Community() {
                         <h2 className={cn(
                           "text-xl md:text-2xl font-black tracking-tighter leading-none text-white transition-colors antialiased",
                           theme.hoverText
-                        )}>
+                        )} style={{ fontVariantCaps: 'small-caps' }}>
                           {tier.name}
                         </h2>
                       </div>
                     </div>
                     <div className="text-right flex flex-col items-end justify-center">
-                      <span className="text-lg md:text-xl font-bold tracking-tight leading-none text-white antialiased">{tier.price}</span>
-                      <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest leading-none mt-0.5 antialiased">/mo</span>
+                      <span className="text-lg md:text-xl font-bold tracking-tight leading-none text-white antialiased" style={{ fontVariantCaps: 'small-caps' }}>{tier.price}</span>
+                      <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest leading-none mt-0.5 antialiased" style={{ fontVariantCaps: 'small-caps' }}>/mo</span>
                     </div>
                   </motion.div>
 
                   <motion.div layout="position" className="flex items-center justify-between mt-4">
                     <span className={cn(
-                        "text-[9px] font-bold tracking-widest uppercase leading-none transition-colors duration-300 antialiased",
+                        "text-[9px] font-bold tracking-widest leading-none transition-colors duration-300 antialiased",
                         isPremium ? theme.text : "text-zinc-500 group-hover:text-zinc-300"
-                    )}>
+                    )} style={{ fontVariantCaps: 'small-caps' }}>
                       {isExpanded ? 'Includes' : 'View Perks'}
                     </span>
                     <motion.div
@@ -265,9 +265,9 @@ function Community() {
                           
                           <div className="flex items-center justify-center min-h-[20px] relative z-10">
                             <span className={cn(
-                              "font-black text-[10px] tracking-widest uppercase leading-none transition-colors antialiased",
+                              "font-black text-[10px] tracking-widest leading-none transition-colors antialiased",
                               isPremium ? theme.text : "text-white group-hover:text-indigo-200"
-                            )}>
+                            )} style={{ fontVariantCaps: 'small-caps' }}>
                               Join {tier.name}
                             </span>
                           </div>
@@ -300,7 +300,7 @@ function Community() {
            
            <div className="max-w-lg mx-auto relative z-10">
               <div className="text-center space-y-4">
-                <span className="text-[9px] font-bold text-zinc-500 tracking-widest leading-none block uppercase antialiased">
+                <span className="text-[9px] font-bold text-zinc-500 tracking-widest leading-none block antialiased" style={{ fontVariantCaps: 'small-caps' }}>
                   Secure Checkout
                 </span>
                 <div className="flex items-center justify-center gap-5 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500 min-h-[20px]">
