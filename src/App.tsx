@@ -59,8 +59,9 @@ function App() {
       {/* Premium background environment */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-neutral-950" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_120%_at_50%_120%,rgba(120,119,198,0.2),rgba(255,255,255,0))]" />
+        {/* Static optimized gradients - no animation for 60fps performance */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_120%_at_50%_120%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
       </div>
 
       <AnimatePresence mode="wait">
