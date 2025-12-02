@@ -20,7 +20,7 @@ const tiers: Tier[] = [
     name: 'hear it first',
     price: '£3.99',
     accent: 'bg-zinc-500',
-    glowColor: 'rgba(255, 255, 255, 0.1)', // Changed to silvery/white glow for VIP metal feel
+    glowColor: 'rgba(255, 255, 255, 0.1)', // Silvery/white glow for VIP metal feel
     highlight: 'ring-zinc-700',
     perks: [
       'Get access to songs before they drop',
@@ -54,31 +54,34 @@ function Community() {
   return (
     <div className="min-h-screen bg-black text-zinc-100 selection:bg-white/20 font-sans antialiased subpixel-antialiased overflow-hidden relative">
       
-      {/* --- VIP "Brushed Titanium" Background Environment --- */}
+      {/* --- VIP "Brushed Titanium" + "Studio Light" Environment --- */}
       <div className="fixed inset-0 -z-10">
         
         {/* 1. Base Layer: Deep Zinc/Black Metal */}
         <div className="absolute inset-0 bg-neutral-950" />
         
-        {/* 2. The "Sheen": An animated, rotating conic gradient for that liquid metal feel */}
+        {/* 2. The "Sheen": An animated, rotating conic gradient for liquid metal feel */}
         <motion.div 
             animate={{ rotate: 360 }}
             transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] opacity-[0.07] pointer-events-none"
+            className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] opacity-[0.05] pointer-events-none"
             style={{
                 background: 'conic-gradient(from 0deg at 50% 50%, #000000 0deg, #FFFFFF 180deg, #000000 360deg)',
                 filter: 'blur(80px)',
             }}
         />
 
-        {/* 3. The "Spotlight": A sharp, top-down light source to focus attention */}
-        <div className="absolute inset-x-0 top-[-20%] h-[80%] bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.05),transparent_70%)] blur-[60px] pointer-events-none" />
+        {/* 3. STUDIO KEY LIGHT: Sharp, top-down white light (Softbox effect) */}
+        <div className="absolute inset-x-0 top-[-20%] h-[70%] bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12),transparent_70%)] blur-[80px] pointer-events-none mix-blend-screen" />
         
-        {/* 4. Heavy Grain Texture: Essential for the "Physical" feel */}
-        <div className="absolute inset-0 opacity-[0.08] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+        {/* 4. STUDIO RIM LIGHT: Subtle Indigo/Violet from bottom-right for 3D depth */}
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-[radial-gradient(circle,rgba(79,70,229,0.08),transparent_70%)] blur-[60px] pointer-events-none mix-blend-screen" />
+
+        {/* 5. Heavy Grain Texture: Essential for the "Physical" feel */}
+        <div className="absolute inset-0 opacity-[0.07] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
         
-        {/* 5. Subtle Vignette to darken edges */}
-        <div className="absolute inset-0 bg-[radial-gradient(transparent_40%,#000000_100%)] pointer-events-none" />
+        {/* 6. Vignette to focus eyes on center */}
+        <div className="absolute inset-0 bg-[radial-gradient(transparent_45%,#000000_100%)] pointer-events-none" />
       </div>
 
       <div className="px-6 py-12 pb-44 max-w-lg mx-auto relative z-10">
@@ -100,11 +103,11 @@ function Community() {
 
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.85] mb-4 text-white drop-shadow-2xl">
             JOIN THE<br />
-            {/* Updated Gradient: Metallic Silver to Indigo */}
-            <span className="inline-block relative text-transparent bg-clip-text bg-gradient-to-br from-white via-zinc-300 to-indigo-400/80 pb-2">
+            {/* Updated Gradient: Chrome/Studio Reflection Style */}
+            <span className="inline-block relative text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-500 pb-2">
               COMMUNITY
               {/* Refined Shine Effect on Text */}
-              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent blur-[1px] mix-blend-overlay" />
+              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent blur-[1px] mix-blend-overlay" />
             </span>
           </h1>
 
@@ -129,7 +132,7 @@ function Community() {
                 className={cn(
                   "cursor-pointer group relative overflow-hidden transition-all duration-500",
                   isPremium 
-                    ? "shadow-[0_0_40px_-10px_rgba(79,70,229,0.15)] border-white/10" 
+                    ? "shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)] border-white/10" 
                     : "shadow-2xl hover:border-white/10"
                 )}
                 initial={{ opacity: 0, y: 20 }}
