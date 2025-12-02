@@ -138,7 +138,13 @@ function App() {
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat w-full h-full will-change-transform"
                 style={{
                   backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
-                  filter: 'grayscale(100%) contrast(1.1) brightness(0.7)',
+                  filter: 'grayscale(100%) contrast(1.25) brightness(0.9)',
+                }}
+              />
+              <div
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 h-full w-full"
+                style={{
+                  backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
                 }}
               />
               <div className="absolute inset-0 bg-black/40" />
