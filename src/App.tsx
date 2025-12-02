@@ -1,86 +1,10 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import Community from './Community';
+import PremiumGlass from './components/ui/premium-glass';
 
-// --- COMPONENT: PremiumGlass ---
-// Used for the main CTA button
-const PremiumGlass = ({ 
-  children, 
-  className = "", 
-  variant = "card", 
-  intensity = "medium", 
-  glow = false,
-  onClick,
-  whileHover,
-  whileTap
-}) => {
-  // Base styles for glassmorphism
-  const baseStyles = "relative backdrop-blur-xl border border-white/10 transition-all duration-300";
-  
-  // Variants
-  const variants = {
-    card: "rounded-3xl bg-neutral-900/40",
-    pill: "rounded-full bg-neutral-900/40"
-  };
-
-  // Intensity levels (opacity of background)
-  const intensities = {
-    low: "bg-neutral-900/20",
-    medium: "bg-neutral-900/40",
-    high: "bg-neutral-900/60"
-  };
-
-  return (
-    <motion.div
-      className={`${baseStyles} ${variants[variant] || variants.card} ${intensities[intensity] || intensities.medium} ${className} ${glow ? 'shadow-[0_0_40px_-10px_rgba(255,255,255,0.05)]' : ''}`}
-      onClick={onClick}
-      whileHover={whileHover}
-      whileTap={whileTap}
-    >
-      <div 
-        className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay rounded-[inherit]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-        }}
-      />
-      {children}
-    </motion.div>
-  );
-};
-
-// --- COMPONENT: Community (The Destination) ---
-// UPDATED: Removed form. Pure "Access Granted" view.
-const Community = () => {
-  return (
-    <div className="flex flex-col items-center justify-center h-full w-full px-6">
-       <div className="max-w-4xl w-full text-center space-y-8">
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="space-y-6"
-          >
-            <h2 className="text-5xl md:text-8xl font-black tracking-tighter text-white uppercase mix-blend-screen text-glow">
-              Welcome Home
-            </h2>
-            
-            <div className="flex flex-col items-center gap-4">
-                <div className="w-px h-12 bg-gradient-to-b from-white/50 to-transparent" />
-                <p className="text-white/50 text-sm md:text-base tracking-[0.3em] uppercase font-bold">
-                  The Inner Circle
-                </p>
-            </div>
-          </motion.div>
-
-       </div>
-    </div>
-  );
-};
-
-// --- APP COMPONENT ---
-
-const LUXURY_EASE = [0.6, 0.01, 0.05, 0.95]; 
-const TRANSITION = { duration: 1.5, ease: LUXURY_EASE };
+// --- Animation Constants (Slower, smoother, more cinematic) ---
+const TRANSITION = { duration: 1.2, ease: [0.16, 1, 0.3, 1] }; // Custom cubic-bezier for "luxury" feel
 
 const containerVars = {
   hidden: { opacity: 0 },
@@ -88,67 +12,96 @@ const containerVars = {
     opacity: 1,
     transition: {
       staggerChildren: 0.15,
-      delayChildren: 0.3,
+      delayChildren: 0.2,
     },
   },
   exit: {
     opacity: 0,
-    transition: { duration: 0.8, ease: "easeInOut" },
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1]
+    },
   },
 };
 
 const textReveal = {
-  hidden: { y: "110%", opacity: 0, filter: "blur(10px)" },
+  hidden: { y: "120%", rotateZ: 3, opacity: 0 },
   show: { 
     y: "0%", 
+    rotateZ: 0,
     opacity: 1,
-    filter: "blur(0px)",
-    transition: { duration: 1.6, ease: LUXURY_EASE } 
+    transition: TRANSITION 
   },
-  exit: { opacity: 0, filter: "blur(5px)" }
+  exit: {
+    y: "-100%",
+    opacity: 0,
+    transition: { duration: 0.6, ease: "easeInOut" }
+  }
 };
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40, filter: 'blur(10px)' },
   show: { 
     opacity: 1, 
     y: 0, 
-    transition: { duration: 1.2, ease: LUXURY_EASE } 
+    filter: 'blur(0px)',
+    transition: { ...TRANSITION, duration: 1.5 } 
   },
-  exit: { opacity: 0, y: -20 }
+  exit: { 
+    opacity: 0, 
+    y: -20, 
+    transition: { duration: 0.4 } 
+  },
 };
 
 function App() {
   const [showCommunity, setShowCommunity] = useState(false);
 
-  return (
-    <div className="min-h-[100dvh] bg-neutral-950 text-white overflow-hidden font-sans selection:bg-indigo-500/20 antialiased text-rendering-geometricPrecision">
-      
-      <style>{`
-        .text-glow {
-          text-shadow: 0 0 40px rgba(255,255,255,0.15);
-        }
-      `}</style>
+  // --- Mouse Movement Logic for Parallax & Spotlight ---
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-      {/* --- ATMOSPHERE LAYER (Lighting & Noise) --- */}
+  // Smooth out the mouse values for that "heavy/premium" feel
+  const smoothX = useSpring(mouseX, { damping: 50, stiffness: 400 });
+  const smoothY = useSpring(mouseY, { damping: 50, stiffness: 400 });
+
+  // Parallax transform for background (moves opposite to mouse)
+  const x = useTransform(smoothX, [0, 1], [-20, 20]);
+  const y = useTransform(smoothY, [0, 1], [-20, 20]);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      // Normalize mouse position from -1 to 1
+      mouseX.set((e.clientX / window.innerWidth) * 2 - 1);
+      mouseY.set((e.clientY / window.innerHeight) * 2 - 1);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  // Spotlight gradient position calculations
+  const spotX = useTransform(smoothX, [-1, 1], ["0%", "100%"]);
+  const spotY = useTransform(smoothY, [-1, 1], ["0%", "100%"]);
+
+  return (
+    <div className="relative min-h-[100dvh] bg-black text-white overflow-hidden font-sans selection:bg-indigo-500/40 antialiased text-rendering-geometricPrecision">
+      
+      {/* --- Ambient Environment Layer --- */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-105"
-          style={{
-            backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
-            filter: 'grayscale(100%) brightness(0.65) contrast(1.15)', 
-          }}
+         {/* Dynamic Spotlight */}
+        <motion.div 
+            className="absolute inset-0 z-10 opacity-40 mix-blend-soft-light"
+            style={{
+              background: useTransform(
+                [spotX, spotY],
+                ([latestX, latestY]) => `radial-gradient(circle 800px at ${latestX} ${latestY}, rgba(120, 119, 198, 0.25), transparent 80%)`
+              )
+            }}
         />
         
-        {/* Spotlight - Persists across views */}
-        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[120vw] h-[80vh] bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08),transparent_70%)] blur-[60px] mix-blend-overlay pointer-events-none" />
-        
-        {/* Deep Vignette */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.95)_100%)]" />
-        
-        {/* Film Grain */}
+        {/* Grain Texture (High frequency for film look) */}
         <div 
-          className="absolute inset-0 opacity-[0.08] mix-blend-overlay"
+          className="absolute inset-0 z-20 opacity-[0.15] mix-blend-overlay"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
           }}
@@ -159,113 +112,129 @@ function App() {
         {showCommunity ? (
           <motion.div
             key="community"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1, ease: LUXURY_EASE }}
-            className="h-full relative z-20"
+            initial={{ opacity: 0, scale: 0.96, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
+            transition={TRANSITION}
+            className="h-full relative z-30"
           >
             <Community />
           </motion.div>
         ) : (
           <motion.div
             key="landing"
-            className="relative z-10 min-h-[100dvh] flex flex-col"
+            className="relative min-h-[100dvh] flex flex-col perspective-1000"
             variants={containerVars}
             initial="hidden"
             animate="show"
             exit="exit"
           >
-            {/* Top Spacer */}
-            <header className="flex-none h-32 w-full" />
+            {/* --- Parallax Background Image --- */}
+            <motion.div 
+              className="fixed inset-0 -z-10"
+              style={{ x, y, scale: 1.15 }} // Scaled up to prevent edges showing during movement
+            >
+              <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat w-full h-full will-change-transform"
+                style={{
+                  backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
+                  filter: 'grayscale(100%) contrast(1.1) brightness(0.7)',
+                }}
+              />
+              <div className="absolute inset-0 bg-black/40" />
+            </motion.div>
 
-            {/* Main Content */}
-            <main className="flex-1 flex flex-col items-center justify-center w-full px-6">
-              <div className="max-w-screen-xl mx-auto w-full text-center space-y-16">
-                
-                {/* HERO TEXT STACK */}
-                <div className="relative group cursor-default">
-                   {/* Main Title */}
-                   <h1 className="font-black tracking-tight leading-[0.85] text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-white mix-blend-screen text-glow">
+            {/* --- Heavy Vignette for Focus --- */}
+            <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] pointer-events-none" />
+
+            {/* --- Main Content --- */}
+            <div className="relative z-30 flex-1 flex flex-col justify-between px-6 py-8 md:px-12 md:py-12 lg:px-20 lg:py-16 max-w-screen-2xl mx-auto w-full h-full mix-blend-screen">
+              
+              <motion.header variants={fadeInUp} className="flex justify-between items-center w-full opacity-60 mix-blend-difference">
+                 {/* Optional minimal brand mark could go here */}
+              </motion.header>
+
+              <div className="flex-1 flex flex-col items-center justify-center w-full">
+                <div className="w-full max-w-5xl text-center space-y-12 md:space-y-16">
+                  
+                  {/* Typography Stack */}
+                  <div className="space-y-4 md:space-y-6">
+                    <h1 className="font-black tracking-tighter leading-[0.8] text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] text-transparent bg-clip-text bg-gradient-to-b from-white via-neutral-200 to-neutral-500">
                       <div className="overflow-hidden py-2">
-                        <motion.div variants={textReveal} className="origin-bottom">KHALED</motion.div>
+                        <motion.div variants={textReveal} className="tracking-[-0.04em] origin-bottom-left">
+                          KHALED
+                        </motion.div>
                       </div>
                       <div className="overflow-hidden py-2">
-                        <motion.div 
-                          variants={textReveal} 
-                          className="text-transparent bg-clip-text bg-gradient-to-b from-white/80 to-white/40"
-                        >
+                        <motion.div variants={textReveal} className="tracking-[-0.04em] origin-bottom-left text-neutral-400">
                           SIDDIQ
                         </motion.div>
                       </div>
-                   </h1>
-                   
-                   {/* Elegant Divider */}
-                   <motion.div 
-                      variants={fadeUp} 
-                      className="w-px h-20 bg-gradient-to-b from-transparent via-white/30 to-transparent mx-auto mt-10"
-                   />
-                </div>
+                    </h1>
+                    
+                    <motion.div variants={fadeInUp} className="overflow-hidden">
+                        <div className="h-px w-24 bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto mt-8" />
+                    </motion.div>
+                  </div>
 
-                {/* EXCLUSIVE BUTTON */}
-                <motion.div variants={fadeUp} className="flex justify-center">
-                   <PremiumGlass
-                      variant="pill"
-                      intensity="medium"
+                  {/* Interactive Button */}
+                  <motion.div variants={fadeInUp} className="w-full flex justify-center relative">
+                    {/* Button glow backing */}
+                    <div className="absolute inset-0 bg-indigo-500/20 blur-3xl rounded-full transform scale-50 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    
+                    <PremiumGlass
+                      variant="card"
+                      intensity="high"
                       glow={true}
-                      className="group relative cursor-pointer overflow-hidden rounded-full border border-white/10 hover:border-white/40 transition-all duration-700 shadow-[0_0_0_0_rgba(255,255,255,0)] hover:shadow-[0_0_30px_-5px_rgba(255,255,255,0.15)]"
+                      className="group cursor-pointer border border-white/10 hover:border-white/30 transition-all duration-500"
                       onClick={() => setShowCommunity(true)}
-                      whileHover={{ scale: 1.02 }}
+                      whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.98 }}
-                   >
-                      <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 pointer-events-none" />
-
-                      <div className="py-5 px-12 flex items-center justify-center space-x-4 relative z-10">
-                         <span className="text-sm md:text-[15px] font-medium tracking-wide text-white/90 lowercase group-hover:text-white transition-colors duration-300 font-mono">
-                            join the crew
-                         </span>
-                         
-                         <motion.div 
-                            className="text-white/60 group-hover:text-white transition-colors duration-300"
-                            initial={{ x: 0 }}
-                            whileHover={{ x: 4 }}
-                         >
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                         </motion.div>
+                    >
+                      <div className="py-5 px-12 font-bold text-[11px] tracking-[0.25em] uppercase text-white group-hover:text-indigo-100 transition-colors duration-500 flex items-center justify-center relative overflow-hidden">
+                        <span className="relative z-10">Enter Community</span>
+                        
+                        {/* Shimmer effect on hover */}
+                        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" />
                       </div>
-                   </PremiumGlass>
-                </motion.div>
+                    </PremiumGlass>
+                  </motion.div>
 
-                {/* MINIMALIST SOCIALS */}
-                <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-10 pt-4">
+                  {/* Socials - Minimalist */}
+                  <motion.div 
+                    variants={fadeInUp} 
+                    className="flex flex-wrap justify-center gap-12 text-[10px] md:text-[11px] font-medium tracking-[0.2em] text-neutral-500"
+                  >
                     {[
-                      { name: 'Spotify', url: 'https://open.spotify.com/artist/2XYgHUbsmab6VT4a3FF9mX' },
-                      { name: 'Apple', url: 'https://music.apple.com/my/artist/kh%C4%81led-sidd%C4%ABq/1170959386' },
-                      { name: 'Instagram', url: 'https://www.instagram.com/khxledsiddiq/?hl=en' }
+                      { name: 'SPOTIFY', url: 'https://open.spotify.com/artist/2XYgHUbsmab6VT4a3FF9mX' },
+                      { name: 'APPLE', url: 'https://music.apple.com/my/artist/kh%C4%81led-sidd%C4%ABq/1170959386' },
+                      { name: 'INSTAGRAM', url: 'https://www.instagram.com/khxledsiddiq/?hl=en' }
                     ].map((link) => (
-                      <a
+                      <motion.a
                         key={link.name}
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[10px] sm:text-[11px] font-semibold tracking-[0.25em] text-neutral-500 hover:text-white uppercase transition-colors duration-500 ease-out flex items-center gap-2 group"
+                        whileHover={{ y: -3, color: "#fff" }}
+                        transition={{ duration: 0.3 }}
+                        className="hover:text-white transition-colors duration-300 relative group"
                       >
-                        <span className="w-1 h-1 rounded-full bg-neutral-700 group-hover:bg-white transition-colors duration-500" />
                         {link.name}
-                      </a>
+                        <span className="absolute -bottom-2 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full opacity-50" />
+                      </motion.a>
                     ))}
-                </motion.div>
+                  </motion.div>
+                </div>
               </div>
-            </main>
 
-            <motion.footer variants={fadeUp} className="flex-none py-10 text-center">
-               <p className="text-[9px] tracking-[0.3em] text-white/20 font-bold uppercase mix-blend-plus-lighter">
-                  © 2025 Khaled Siddiq
-               </p>
-            </motion.footer>
-
+              {/* Footer */}
+              <motion.footer 
+                variants={fadeInUp} 
+                className="text-center text-[9px] tracking-[0.3em] text-neutral-600 font-bold uppercase pb-4"
+              >
+                © 2025 Khaled Siddiq
+              </motion.footer>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
