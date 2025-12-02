@@ -1,38 +1,38 @@
-import { useEffect, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import PremiumGlass from './ui/premium-glass';
 
-// --- Animation Physics ---
-const TRANSITION = { duration: 1.4, ease: [0.25, 1, 0.5, 1] };
+// --- Animation Constants ---
+// Faster, smoother transition (0.8s - 1.0s is the sweet spot for UI)
+const TRANSITION = { duration: 0.9, ease: [0.16, 1, 0.3, 1] };
 
 const containerVars = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.12,
+      staggerChildren: 0.1, // Faster stagger for a snappier load
       delayChildren: 0.1,
     },
   },
 };
 
-const titleReveal = {
-  hidden: { y: "110%", rotateZ: 2, opacity: 0, filter: 'blur(10px)' },
+const textReveal = {
+  // Removed rotateZ. Vertical reveal is more professional/subtle.
+  hidden: { y: "100%", opacity: 0 },
   show: { 
     y: "0%", 
-    rotateZ: 0,
     opacity: 1,
-    filter: 'blur(0px)',
     transition: TRANSITION 
   },
 };
 
-const fadeInSlow = {
-  hidden: { opacity: 0, y: 20 },
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20, filter: 'blur(5px)' }, // Less blur, less distance
   show: { 
     opacity: 1, 
     y: 0, 
-    transition: { ...TRANSITION, duration: 1.8 } 
+    filter: 'blur(0px)',
+    transition: { ...TRANSITION, duration: 1.1 } 
   },
 };
 
@@ -41,107 +41,115 @@ interface LandingPageProps {
 }
 
 export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
-  // Parallax hook
-  const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, 200]);
-
-  // Mouse move effect (Subtle)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) - 0.5,
-        y: (e.clientY / window.innerHeight) - 0.5,
-      });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   return (
     <motion.div
-      // REVERTED: Explicitly setting Helvetica font stack
-      className="relative min-h-[100dvh] flex flex-col overflow-hidden text-zinc-100 perspective-1000 selection:bg-indigo-500/30"
-      style={{ fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
+      className="relative min-h-[100dvh] flex flex-col perspective-1000 bg-black"
       variants={containerVars}
       initial="hidden"
       animate="show"
     >
-      {/* --- LAYER 1: The Image (Visible & Living) --- */}
-      {/* REVERTED: Removed the solid black background layers. 
-          Increased opacity and reduced grayscale to make the image the hero again. */}
-      <motion.div 
-        className="fixed inset-0 -z-10"
-        style={{ y: y1, scale: 1.1 }} 
-        animate={{
-            x: mousePosition.x * -15, 
-            y: mousePosition.y * -15
-        }}
-        transition={{ type: "spring", stiffness: 40, damping: 30 }}
-      >
+      {/* --- Static Background Image --- */}
+      <div className="fixed inset-0 -z-10">
         <div 
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat w-full h-full scale-[1.02]" // Slight scale to avoid edge artifacts
           style={{
             backgroundImage: `url('/Khaled-Siddiq.jpeg')`,
-            // Much clearer image settings
-            opacity: 0.75, 
-            filter: 'grayscale(30%) contrast(110%)'
+            opacity: 0.65, // Increased slightly from 0.6 for visibility
+            filter: 'grayscale(40%)' // Reduced from 100% to 40% to bring back subtle skin tones
           }}
         />
-        {/* Lighter gradient just to ensure text readability at the bottom */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
-      </motion.div>
+        {/* Lighter gradient overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60" />
+      </div>
 
-      {/* --- LAYER 2: Film Grain (Texture) --- */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.06] mix-blend-overlay z-0"
-           style={{
-             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
-           }}
-      />
-
-      {/* --- Main Layout --- */}
-      <div className="relative z-10 flex-1 flex flex-col px-6 py-10 md:px-12 lg:px-20 max-w-[1800px] mx-auto w-full h-full">
+      {/* --- Main Content --- */}
+      <div className="relative z-30 flex-1 flex flex-col justify-between px-6 py-8 md:px-12 md:py-10 lg:px-20 lg:py-14 max-w-screen-2xl mx-auto w-full h-full mix-blend-screen">
         
         {/* Minimal Header */}
-        <motion.header variants={fadeInSlow} className="flex justify-between items-center w-full">
-           <span className="text-[10px] tracking-[0.4em] text-white/80 font-bold uppercase mix-blend-overlay">
-             est. 2025
-           </span>
+        <motion.header variants={fadeInUp} className="flex justify-center md:justify-between items-center w-full opacity-70">
+           {/* Placeholder for stability */}
+           <div className="hidden md:block w-4" /> 
         </motion.header>
 
-        {/* Hero Center */}
-        <div className="flex-1 flex flex-col items-center justify-center w-full min-h-[60vh]">
-          <div className="w-full text-center relative">
+        <div className="flex-1 flex flex-col items-center justify-center w-full">
+          <div className="w-full max-w-5xl text-center space-y-10 md:space-y-14">
             
-            {/* The Typography - Helvetica, Bold, Tight */}
-            <div className="overflow-hidden mb-8">
-              <motion.h1 
-                variants={titleReveal}
-                className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[0.85] text-white"
-              >
-                khaled siddiq
-              </motion.h1>
+            {/* Typography Stack */}
+            <div className="space-y-2 md:space-y-4">
+              <h1 className="font-black tracking-tighter leading-[0.85] text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-transparent bg-clip-text bg-gradient-to-b from-white via-white/90 to-white/50">
+                <div className="overflow-hidden py-2">
+                  <motion.div variants={textReveal} className="tracking-[-0.04em] origin-bottom-left" style={{ fontVariantCaps: 'small-caps' }}>
+                    khaled
+                  </motion.div>
+                </div>
+                <div className="overflow-hidden py-2">
+                  <motion.div variants={textReveal} className="tracking-[-0.04em] origin-bottom-left text-white/60" style={{ fontVariantCaps: 'small-caps' }}>
+                    siddiq
+                  </motion.div>
+                </div>
+              </h1>
+              
+              <motion.div variants={fadeInUp} className="overflow-hidden">
+                  <div className="h-px w-16 bg-white/30 mx-auto mt-8" />
+              </motion.div>
             </div>
 
-            <motion.p 
-              variants={fadeInSlow}
-              className="text-lg md:text-xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed"
-            >
-              artist & creative director
-            </motion.p>
+            {/* Interactive Button */}
+            <motion.div variants={fadeInUp} className="w-full flex justify-center relative z-20">
+              {/* Subtle glow, reduced blur radius */}
+              <div className="absolute inset-0 bg-indigo-500/10 blur-2xl rounded-full transform scale-75 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              
+              <PremiumGlass
+                variant="card"
+                intensity="heavy"
+                glow={true}
+                className="group cursor-pointer border border-white/5 hover:border-white/20 transition-all duration-500"
+                onClick={onEnterCommunity}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <div className="py-4 px-10 font-bold text-[10px] tracking-[0.3em] text-zinc-300 group-hover:text-white transition-colors duration-500 flex items-center justify-center relative overflow-hidden uppercase">
+                  <span className="relative z-10">enter community</span>
+                </div>
+              </PremiumGlass>
+            </motion.div>
 
-            <motion.button
-              variants={fadeInSlow}
-              onClick={onEnterCommunity}
-              className="group relative px-8 py-4 text-sm tracking-[0.2em] uppercase font-medium text-white border border-white/20 hover:border-white/40 transition-all duration-500 hover:bg-white/5"
+            {/* Socials - Tighter Spacing */}
+            <motion.div 
+              variants={fadeInUp} 
+              className="flex flex-wrap justify-center gap-8 text-[9px] md:text-[10px] font-semibold tracking-[0.25em] text-neutral-400"
+              style={{ fontVariantCaps: 'small-caps' }}
             >
-              <span className="relative z-10">enter community</span>
-              <div className="absolute inset-0 bg-white/5 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-            </motion.button>
+              {[
+                { name: 'spotify', url: 'https://open.spotify.com/artist/2XYgHUbsmab6VT4a3FF9mX' },
+                { name: 'apple', url: 'https://music.apple.com/my/artist/kh%C4%81led-sidd%C4%ABq/1170959386' },
+                { name: 'instagram', url: 'https://www.instagram.com/khxledsiddiq/?hl=en' }
+              ].map((link) => (
+                <motion.a
+                  key={link.name}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -2, color: "#fff" }}
+                  transition={{ duration: 0.2 }}
+                  className="hover:text-white transition-colors duration-300 relative group py-2"
+                >
+                  {link.name}
+                  <span className="absolute bottom-1 left-0 w-0 h-[1px] bg-white/50 transition-all duration-300 group-hover:w-full" />
+                </motion.a>
+              ))}
+            </motion.div>
           </div>
         </div>
+
+        {/* Footer */}
+        <motion.footer 
+          variants={fadeInUp} 
+          className="text-center text-[9px] tracking-[0.3em] text-neutral-600 font-bold pb-2 uppercase"
+        >
+          © 2025 khaled siddiq
+        </motion.footer>
       </div>
     </motion.div>
-  )
+  );
 }
