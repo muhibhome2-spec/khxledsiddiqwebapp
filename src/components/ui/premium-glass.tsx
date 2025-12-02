@@ -22,7 +22,7 @@ const PremiumGlass = forwardRef<HTMLDivElement, PremiumGlassProps>(
     as: Component = motion.div,
     ...props 
   }, ref) => {
-    const baseClasses = "relative overflow-hidden border backdrop-blur-xl antialiased isolation-isolate will-change-transform translate-z-0";
+    const baseClasses = "relative overflow-hidden border backdrop-blur-lg sm:backdrop-blur-xl antialiased isolation-isolate will-change-transform translate-z-0";
     
     const variantClasses = {
       default: "rounded-2xl",

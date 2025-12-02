@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Check, 
@@ -56,8 +56,8 @@ const BackButton = ({ onClick }: { onClick: () => void }) => (
     animate={{ opacity: 1, x: 0 }}
     transition={{ duration: 0.6, ease: EASE }}
     onClick={onClick}
-    // 8-POINT GRID: mb-12 (48px) is a strictly enforced multiple
-    className="mb-12 group flex items-center gap-2 text-zinc-600 hover:text-zinc-300 transition-colors duration-300"
+    // FIX-001: Reduced mobile margin
+    className="mb-8 sm:mb-12 group flex items-center gap-2 text-zinc-600 hover:text-zinc-300 transition-colors duration-300"
     style={{ fontVariantCaps: 'small-caps' }}
   >
     <div className="p-1.5 rounded-full border border-white/5 bg-white/5 group-hover:bg-white/10 transition-colors">
@@ -72,8 +72,8 @@ const PageHeader = () => (
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.8, ease: EASE }}
-    // FLUID SPACING: Margin bottom scales with screen
-    className="mb-[clamp(2.5rem,6vw,4rem)] text-center"
+    // FIX-001: Reduced mobile spacing
+    className="mb-[clamp(1.5rem,5vw,4rem)] text-center"
   >
     <div className="inline-flex items-center justify-center gap-4 mb-6 opacity-40">
       <div className="h-px w-8 bg-gradient-to-r from-transparent via-zinc-500 to-transparent" />
@@ -83,8 +83,8 @@ const PageHeader = () => (
       <div className="h-px w-8 bg-gradient-to-r from-transparent via-zinc-500 to-transparent" />
     </div>
 
-    {/* FLUID TYPOGRAPHY: No breakpoints, just math. */}
-    <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] font-black tracking-tighter leading-[0.85] mb-6 text-zinc-200">
+    {/* FIX-001: Reduced mobile typography scaling */}
+    <h1 className="text-[clamp(2rem,7vw,4.5rem)] font-black tracking-tighter leading-[0.85] mb-4 sm:mb-6 text-zinc-200">
       join the<br />
       <span className="text-white/10 blur-[2px] absolute ml-1 mt-1 select-none -z-10 lowercase">community</span>
       <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-zinc-300 to-zinc-600 lowercase">
@@ -92,7 +92,7 @@ const PageHeader = () => (
       </span>
     </h1>
 
-    <p className="text-xs md:text-sm text-zinc-500 leading-relaxed max-w-[280px] mx-auto font-normal lowercase tracking-wide">
+    <p className="text-[11px] sm:text-xs md:text-sm text-zinc-500 leading-relaxed max-w-[280px] mx-auto font-normal lowercase tracking-wide">
       get closer to the music, the journey, and the soul behind it all.
     </p>
   </motion.header>
@@ -166,7 +166,7 @@ const TierCard = ({
 
       <PremiumGlass
         intensity="medium"
-        className={`relative overflow-hidden transition-all duration-500 border rounded-2xl ${
+        className={`relative overflow-hidden transition-all duration-500 border rounded-2xl will-change-transform ${
           isExpanded ? theme.border : "border-white/[0.03] hover:border-white/[0.08]"
         }`}
       >
@@ -183,8 +183,8 @@ const TierCard = ({
             aria-expanded={isExpanded}
             onClick={onToggle}
             onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onToggle()}
-            // 8-POINT GRID: Fluid Padding 'p-[clamp(1.5rem,3vw,2rem)]'
-            className="w-full text-left p-[clamp(1.5rem,3vw,2rem)] flex flex-col cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-white/20 rounded-xl"
+            // FIX-001: Reduced mobile padding
+            className="w-full text-left p-[clamp(1rem,3vw,2rem)] flex flex-col cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-white/20 rounded-xl"
           >
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-5">
@@ -197,7 +197,7 @@ const TierCard = ({
                 </div>
                 
                 <div>
-                  <h2 className={`text-xl font-bold tracking-tight transition-colors duration-300 lowercase ${
+                  <h2 className={`text-lg sm:text-xl font-bold tracking-tight transition-colors duration-300 lowercase ${
                     isExpanded ? "text-zinc-200" : "text-zinc-500 group-hover:text-zinc-400"
                   }`}>
                     {tier.name}
@@ -207,7 +207,7 @@ const TierCard = ({
               </div>
 
               <div className="text-right">
-                <span className={`text-lg font-medium tracking-tight block transition-colors duration-300 lowercase ${isExpanded ? theme.text : "text-zinc-600"}`}>
+                <span className={`text-base sm:text-lg font-medium tracking-tight block transition-colors duration-300 lowercase ${isExpanded ? theme.text : "text-zinc-600"}`}>
                   {tier.price}
                 </span>
               </div>
@@ -221,8 +221,8 @@ const TierCard = ({
                   exit={{ opacity: 0, height: 0 }}
                   transition={TRANSITION}
                 >
-                  <div className="pt-6 mt-6 border-t border-white/[0.04] space-y-5">
-                    <div className="space-y-3 pl-1">
+                  <div className="pt-4 sm:pt-6 mt-4 sm:mt-6 border-t border-white/[0.04] space-y-3 sm:space-y-5">
+                    <div className="space-y-2 sm:space-y-3 pl-1">
                       {tier.perks.map((perk: string, i: number) => (
                         <motion.div
                           key={i}
@@ -232,7 +232,7 @@ const TierCard = ({
                           className="flex items-start gap-3.5"
                         >
                           <div className={`mt-[7px] w-1 h-1 rounded-full flex-shrink-0 transition-colors duration-500 ${isPremium ? "bg-amber-500/50" : "bg-zinc-700"}`} />
-                          <span className="text-sm text-zinc-400 leading-relaxed font-normal lowercase">
+                          <span className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-normal lowercase">
                             {perk}
                           </span>
                         </motion.div>
@@ -243,7 +243,7 @@ const TierCard = ({
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={(e) => e.stopPropagation()}
-                      className={`w-full mt-4 py-4 rounded-xl font-medium text-xs tracking-[0.2em] relative overflow-hidden transition-all duration-300 border backdrop-blur-sm ${theme.button}`}
+                      className={`w-full mt-3 sm:mt-4 py-3 sm:py-4 rounded-xl font-medium text-[10px] sm:text-xs tracking-[0.2em] relative overflow-hidden transition-all duration-300 border will-change-transform ${theme.button}`}
                       style={{ fontVariantCaps: 'small-caps' }}
                     >
                       {isPremium && <Sparkles className="absolute top-1 right-1 w-20 h-20 text-amber-500/5 -rotate-12 pointer-events-none" />}
@@ -303,18 +303,23 @@ interface CommunityPageProps {
 export default function CommunityPage({ onBack }: CommunityPageProps) {
   const [expandedTier, setExpandedTier] = useState<string | null>(null);
 
+  // FIX-002: Force scroll to top on component mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const toggleTier = (id: string) => {
     setExpandedTier(expandedTier === id ? null : id);
   };
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-white/20">
+    <div className="min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-white/20 will-change-transform">
       {/* Background Stack */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
         <div className="absolute inset-0 bg-[#020202]" />
         
         {/* Brushed Metal Texture */}
-        <div className="absolute inset-0 opacity-[0.05] mix-blend-overlay"
+        <div className="absolute inset-0 opacity-[0.02] sm:opacity-[0.05] mix-blend-overlay"
              style={{
                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8 0.01' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
                backgroundSize: '200px 200px'
@@ -327,13 +332,13 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
       </div>
 
       {/* Main Container */}
-      <div className="w-full max-w-md mx-auto px-[clamp(1.25rem,5vw,1.5rem)] py-[clamp(4rem,10vw,6rem)] pb-44 relative z-10">
+      <div className="w-full max-w-md mx-auto px-[clamp(1rem,4vw,1.5rem)] py-[clamp(2rem,8vw,6rem)] pb-44 relative z-10">
         
         <BackButton onClick={onBack} />
         <PageHeader />
 
         {/* Tiers List */}
-        <motion.div className="space-y-[clamp(1rem,2vw,1.5rem)]">
+        <motion.div className="space-y-[clamp(0.75rem,2vw,1.5rem)]">
           {TIERS.map((tier, index) => (
             <TierCard 
               key={tier.id}
