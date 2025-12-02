@@ -113,20 +113,20 @@ function Community() {
           <div className="inline-flex md:flex items-center gap-3 mb-6 opacity-70">
             <div className="h-px w-8 bg-white/50 hidden md:block" />
             <span className="text-[9px] md:text-[10px] tracking-widest font-bold text-zinc-400 uppercase leading-none antialiased">
-              Khaled Siddiq
+              khaled siddiq
             </span>
             <div className="h-px w-8 bg-white/50 md:hidden" />
           </div>
 
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.85] mb-4 text-white antialiased">
-            JOIN THE<br />
+            join the<br />
             <span className="inline-block relative text-transparent bg-clip-text bg-gradient-to-b from-indigo-300 via-indigo-400 to-indigo-600">
-              COMMUNITY
+              community
             </span>
           </h1>
 
           <p className="text-xs md:text-sm text-zinc-400 leading-[1.5] max-w-xs font-medium tracking-[0.01em] mx-auto md:mx-0 antialiased" style={{ fontVariantCaps: 'small-caps' }}>
-            Get closer to the music, the journey, and the soul behind it all.
+            get closer to the music, the journey, and the soul behind it all.
           </p>
         </motion.header>
 
@@ -182,8 +182,8 @@ function Community() {
                         <h2 className={cn(
                           "text-xl md:text-2xl font-black tracking-tighter leading-none text-white transition-colors antialiased",
                           theme.hoverText
-                        )} style={{ fontVariantCaps: 'small-caps' }}>
-                          {tier.name}
+                        )} style={{ fontVariantCaps: 'small-caps', textTransform: 'lowercase' }}>
+                          {tier.name.toLowerCase()}
                         </h2>
                       </div>
                     </div>
@@ -197,8 +197,8 @@ function Community() {
                     <span className={cn(
                         "text-[9px] font-bold tracking-widest leading-none transition-colors duration-300 antialiased",
                         isPremium ? theme.text : "text-zinc-500 group-hover:text-zinc-300"
-                    )} style={{ fontVariantCaps: 'small-caps' }}>
-                      {isExpanded ? 'Includes' : 'View Perks'}
+                    )} style={{ fontVariantCaps: 'small-caps', textTransform: 'lowercase' }}>
+                      {isExpanded ? 'includes' : 'view perks'}
                     </span>
                     <motion.div
                       className="flex items-center justify-center"
@@ -267,8 +267,8 @@ function Community() {
                             <span className={cn(
                               "font-black text-[10px] tracking-widest leading-none transition-colors antialiased",
                               isPremium ? theme.text : "text-white group-hover:text-indigo-200"
-                            )} style={{ fontVariantCaps: 'small-caps' }}>
-                              Join {tier.name}
+                            )} style={{ fontVariantCaps: 'small-caps', textTransform: 'lowercase' }}>
+                              join {tier.name.toLowerCase()}
                             </span>
                           </div>
                         </PremiumGlass>
@@ -301,7 +301,7 @@ function Community() {
            <div className="max-w-lg mx-auto relative z-10">
               <div className="text-center space-y-4">
                 <span className="text-[9px] font-bold text-zinc-500 tracking-widest leading-none block antialiased" style={{ fontVariantCaps: 'small-caps' }}>
-                  Secure Checkout
+                  secure checkout
                 </span>
                 <div className="flex items-center justify-center gap-5 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500 min-h-[20px]">
                   <img src="/6570d668df4688e1970d40c4_Apple_Pay_logo 1.png" alt="Apple Pay" className="h-5 object-contain" />
