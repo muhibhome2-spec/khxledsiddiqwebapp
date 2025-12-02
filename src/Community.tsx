@@ -2,16 +2,23 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronDown } from 'lucide-react';
 import PremiumGlass from './components/ui/premium-glass';
-import { cn } from '@/lib/utils'; // Assuming you set this up as per previous instructions
+// FIX: We import the library functions directly here instead of looking for the missing file
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+// FIX: We define the utility function right here to stop the error
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 interface Tier {
   id: string;
   name: string;
   price: string;
   perks: string[];
-  accent: string;     // Tailwind class for dot color
-  glowColor: string;  // Hex/RGB for the radial gradient
-  highlight: string;  // Ring color
+  accent: string;     
+  glowColor: string;  
+  highlight: string;  
 }
 
 const tiers: Tier[] = [
@@ -20,7 +27,7 @@ const tiers: Tier[] = [
     name: 'hear it first',
     price: '£3.99',
     accent: 'bg-zinc-500',
-    glowColor: 'rgba(113, 113, 122, 0.2)', // Zinc glow
+    glowColor: 'rgba(113, 113, 122, 0.2)', 
     highlight: 'ring-zinc-700',
     perks: [
       'Get access to songs before they drop',
@@ -32,7 +39,7 @@ const tiers: Tier[] = [
     name: 'see it first',
     price: '£7.99',
     accent: 'bg-violet-400',
-    glowColor: 'rgba(139, 92, 246, 0.3)', // Violet glow
+    glowColor: 'rgba(139, 92, 246, 0.3)', 
     highlight: 'ring-violet-900/50',
     perks: [
       'All "Hear it First" benefits',
@@ -81,7 +88,6 @@ function Community() {
 
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.9] mb-4 text-white">
             JOIN THE<br />
-            {/* UPDATED: Gradient Text with 'Carved' top highlight */}
             <span className="inline-block relative text-transparent bg-clip-text bg-gradient-to-b from-indigo-300 via-indigo-400 to-indigo-600">
               COMMUNITY
               <div className="absolute top-0 left-0 w-full h-[1px] bg-white/30 blur-[1px] mix-blend-overlay" />
@@ -106,7 +112,6 @@ function Community() {
                 key={tier.id}
                 variant="card"
                 intensity={isPremium ? "heavy" : "medium"}
-                // UPDATED: Dynamic shadow and conditional border glow
                 className={cn(
                   "cursor-pointer group relative overflow-hidden",
                   isPremium ? "shadow-indigo-500/20 shadow-2xl border-indigo-500/20" : "shadow-xl"
@@ -115,7 +120,6 @@ function Community() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1, ease: EASE }}
               >
-                {/* UPDATED: Background Radial Glow for Premium feel */}
                 <motion.div 
                     className="absolute inset-0 -z-10 transition-opacity duration-500"
                     initial={{ opacity: 0 }}
@@ -129,7 +133,6 @@ function Community() {
                 <motion.button
                   onClick={() => toggleTier(tier.id)}
                   className="w-full text-left p-6 md:p-7 relative z-20"
-                  // UPDATED: Spring Physics for physical feel
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -171,7 +174,6 @@ function Community() {
                   </motion.div>
                 </motion.button>
 
-                {/* --- Expanded Content --- */}
                 <AnimatePresence>
                   {isExpanded && (
                     <motion.div
@@ -207,7 +209,7 @@ function Community() {
                           transition={{ delay: 0.1, duration: 0.4 }}
                           variant="card"
                           intensity="light"
-                          glow={isPremium} // Pass glow prop if your component handles it
+                          glow={isPremium}
                           className={cn(
                             "w-full mt-8 py-4 cursor-pointer group relative overflow-hidden",
                             isPremium ? "bg-indigo-600/20 hover:bg-indigo-600/30 border-indigo-500/30" : "hover:bg-white/5"
@@ -246,7 +248,6 @@ function Community() {
           intensity="heavy"
           className="relative border-t border-white/5 p-4 pb-8 pointer-events-auto rounded-none backdrop-blur-2xl"
         >
-           {/* UPDATED: Top light border for 3D Floating Effect */}
            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
            
            <div className="max-w-lg mx-auto relative z-10">
