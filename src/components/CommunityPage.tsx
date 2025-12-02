@@ -137,10 +137,10 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: EASE }}
           onClick={onBack}
-          className="mb-10 group flex items-center gap-2 text-zinc-600 hover:text-zinc-200 transition-colors duration-300"
+          className="mb-8 group flex items-center gap-2 text-zinc-600 hover:text-zinc-200 transition-colors duration-300"
           style={{ fontVariantCaps: 'small-caps' }}
         >
-          <div className="p-1.5 rounded-full border border-zinc-800 group-hover:border-zinc-600 transition-colors">
+          <div className="p-1.5 rounded-full bg-zinc-900/50 backdrop-blur-sm group-hover:bg-zinc-800/50 transition-colors">
             <ArrowLeft size={12} />
           </div>
           <span className="text-xs tracking-widest font-medium">back</span>
@@ -151,7 +151,7 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: EASE }}
-          className="mb-12 text-center"
+          className="mb-10 text-center"
         >
           <div className="inline-flex items-center justify-center gap-4 mb-6 opacity-60">
             <div className="h-px w-8 bg-gradient-to-r from-transparent via-zinc-500 to-transparent" />
@@ -161,7 +161,7 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
             <div className="h-px w-8 bg-gradient-to-r from-transparent via-zinc-500 to-transparent" />
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-black tracking-tighter leading-[0.85] mb-6 text-white mix-blend-screen" style={{ fontVariantCaps: 'small-caps' }}>
+          <h1 className="text-5xl md:text-6xl font-black tracking-tighter leading-[0.85] mb-5 text-white mix-blend-screen" style={{ fontVariantCaps: 'small-caps' }}>
             join the<br />
             <span className="text-white/30 blur-[1px] absolute ml-1 mt-1 select-none -z-10">community</span>
             <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-zinc-200 to-zinc-600">
@@ -175,7 +175,7 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
         </motion.header>
 
         {/* Tiers List */}
-        <motion.div className="space-y-4">
+        <motion.div className="space-y-3">
           {tiers.map((tier, index) => {
             const isExpanded = expandedTier === tier.id;
             const theme = themeConfig[tier.theme];
@@ -192,7 +192,7 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
               >
                 {/* DYNAMIC GLOW LAYER */}
                 <div 
-                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl -z-10"
+                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-700 blur-2xl -z-10"
                   style={{
                     background: `radial-gradient(circle at center, ${theme.glowColor} 0%, transparent 70%)`,
                     transform: 'scale(1.1)',
@@ -201,18 +201,20 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
 
                 <PremiumGlass
                   className={`
-                    relative overflow-hidden rounded-2xl border ${theme.border}
-                    bg-gradient-to-br ${theme.gradient}
-                    backdrop-blur-xl backdrop-saturate-150
+                    relative overflow-hidden rounded-2xl
+                    bg-gradient-to-br from-zinc-900/40 via-zinc-900/20 to-transparent
+                    backdrop-blur-2xl backdrop-saturate-200
                     transition-all duration-500 ease-out
                     hover:scale-[1.02] hover:shadow-2xl
                     ${isExpanded ? 'shadow-2xl scale-[1.01]' : ''}
                   `}
+                  intensity="heavy"
+                  noise={true}
                 >
                   {/* Premium Badge for Gold Tier */}
                   {isPremium && (
-                    <div className="absolute top-4 right-4 z-20">
-                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 backdrop-blur-sm">
+                    <div className="absolute top-3 right-3 z-20">
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 backdrop-blur-sm">
                         <Sparkles size={10} className="text-amber-400" />
                         <span className="text-[9px] font-medium text-amber-200 tracking-wider" style={{ fontVariantCaps: 'small-caps' }}>
                           premium
@@ -222,11 +224,11 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
                   )}
 
                   {/* Main Content */}
-                  <div className="p-6">
+                  <div className="p-5">
                     {/* Header Row */}
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <div className={`p-2.5 rounded-xl ${theme.accent}/20 border border-current/20`}>
+                        <div className={`p-2.5 rounded-xl ${theme.accent}/20`}>
                           <Icon size={18} className={theme.icon} />
                         </div>
                         <div>
@@ -251,7 +253,7 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
                       onClick={() => toggleTier(tier.id)}
                       className={`
                         w-full flex items-center justify-between p-3 rounded-xl
-                        border ${theme.button}
+                        ${theme.button}
                         transition-all duration-300 group/toggle
                         hover:scale-[1.02] active:scale-[0.98]
                       `}
@@ -277,7 +279,7 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
                           transition={{ duration: 0.4, ease: EASE }}
                           className="overflow-hidden"
                         >
-                          <div className="pt-4 space-y-3">
+                          <div className="pt-3 space-y-2.5">
                             {tier.perks.map((perk, perkIndex) => (
                               <motion.div
                                 key={perkIndex}
@@ -301,7 +303,7 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.4, delay: 0.2 }}
                               className={`
-                                w-full mt-6 py-3.5 px-6 rounded-xl font-semibold text-sm
+                                w-full mt-4 py-3.5 px-6 rounded-xl font-semibold text-sm
                                 ${theme.accent} text-black
                                 hover:scale-[1.02] active:scale-[0.98]
                                 transition-all duration-200
@@ -327,11 +329,11 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4, ease: EASE }}
-          className="fixed bottom-0 left-0 right-0 p-5 bg-black/80 backdrop-blur-xl border-t border-zinc-800/50"
+          className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/95 via-black/80 to-transparent backdrop-blur-2xl"
         >
           <div className="max-w-md mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-zinc-800/50 border border-zinc-700/50">
+              <div className="p-2 rounded-lg bg-zinc-900/60 backdrop-blur-sm">
                 <CreditCard size={16} className="text-zinc-400" />
               </div>
               <div>
