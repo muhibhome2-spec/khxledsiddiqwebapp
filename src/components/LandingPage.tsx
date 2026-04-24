@@ -72,9 +72,11 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
         ['--panel-w' as string]: 'min(56.25vh, 42vw)',
       }}
     >
-      {/* Video — full-bleed on mobile, right panel on desktop. Single <video>, one decode. */}
+      {/* Video — full-bleed on mobile, right panel on desktop. Single <video>, one decode.
+          On desktop the left edge is masked to fade into transparency so the content panel's
+          portrait bleeds into the video seamlessly. */}
       <video
-        className="absolute top-0 left-0 h-full w-full md:left-auto md:right-0 md:w-[var(--panel-w)] object-cover z-0"
+        className="absolute top-0 left-0 h-full w-full md:left-auto md:right-0 md:w-[var(--panel-w)] object-cover z-0 md:[mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_100%)] md:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_100%)]"
         poster={ASSETS.poster}
         autoPlay
         loop
@@ -86,10 +88,22 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
         <source src={ASSETS.video} type="video/mp4" />
       </video>
 
-      {/* Desktop-only: soft edge where left panel meets video. */}
+      {/* Desktop-only: ambient portrait backdrop behind the content panel.
+          - Heavily vignetted, low-saturation, low-opacity — reads as texture not hero image.
+          - Extends past the video seam so the portrait bleeds INTO the masked video edge.
+          - If /khaled-portrait.jpg isn't present the radial gradient alone still renders,
+            so the panel never looks "broken". */}
       <div
-        className="hidden md:block absolute top-0 h-full w-24 z-10 pointer-events-none bg-gradient-to-r from-black to-transparent"
-        style={{ right: 'var(--panel-w)' }}
+        className="hidden md:block absolute top-0 left-0 h-full z-0 pointer-events-none"
+        style={{
+          right: 'calc(var(--panel-w) - 5vw)',
+          backgroundImage:
+            'radial-gradient(ellipse at 28% 40%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.95) 80%), url(/khaled-portrait.jpg)',
+          backgroundSize: 'cover, cover',
+          backgroundPosition: 'center, 20% center',
+          backgroundRepeat: 'no-repeat',
+          filter: 'grayscale(0.35) contrast(1.05)',
+        }}
         aria-hidden="true"
       />
 
