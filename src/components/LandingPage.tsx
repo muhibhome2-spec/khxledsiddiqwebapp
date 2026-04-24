@@ -73,10 +73,9 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       }}
     >
       {/* Video — full-bleed on mobile, right panel on desktop. Single <video>, one decode.
-          On desktop the left edge is masked to fade into transparency so the content panel's
-          portrait bleeds into the video seamlessly. */}
+          No mask on the video itself — any in-frame text/graphics stay intact. */}
       <video
-        className="absolute top-0 left-0 h-full w-full md:left-auto md:right-0 md:w-[var(--panel-w)] object-cover z-0 md:[mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_100%)] md:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_100%)]"
+        className="absolute top-0 left-0 h-full w-full md:left-auto md:right-0 md:w-[var(--panel-w)] object-cover z-0"
         poster={ASSETS.poster}
         autoPlay
         loop
@@ -89,20 +88,32 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       </video>
 
       {/* Desktop-only: ambient portrait backdrop behind the content panel.
-          - Heavily vignetted, low-saturation, low-opacity — reads as texture not hero image.
-          - Extends past the video seam so the portrait bleeds INTO the masked video edge.
-          - If /khaled-portrait.jpg isn't present the radial gradient alone still renders,
-            so the panel never looks "broken". */}
+          Sits entirely in the content panel — never overlaps the video, so nothing
+          in the video gets obscured.
+          Layers: radial ink vignette on top + /khaled-portrait.jpg beneath.
+          Degrades gracefully: if the JPG is missing, the vignette alone still reads. */}
       <div
         className="hidden md:block absolute top-0 left-0 h-full z-0 pointer-events-none"
         style={{
-          right: 'calc(var(--panel-w) - 5vw)',
+          right: 'var(--panel-w)',
           backgroundImage:
-            'radial-gradient(ellipse at 28% 40%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.95) 80%), url(/khaled-portrait.jpg)',
+            'radial-gradient(ellipse at 30% 45%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.95) 85%), url(/khaled-portrait.jpg)',
           backgroundSize: 'cover, cover',
-          backgroundPosition: 'center, 20% center',
+          backgroundPosition: 'center, 25% center',
           backgroundRepeat: 'no-repeat',
           filter: 'grayscale(0.35) contrast(1.05)',
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Desktop-only: soft depth shadow on the content-panel side of the seam.
+          Lives in the content panel only — the video is untouched. Creates the
+          "fading into the video" feel without masking the video. */}
+      <div
+        className="hidden md:block absolute top-0 h-full w-40 z-10 pointer-events-none"
+        style={{
+          right: 'var(--panel-w)',
+          backgroundImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.85) 100%)',
         }}
         aria-hidden="true"
       />
@@ -110,7 +121,7 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       {/* Mobile-only: bottom vignette for CTA legibility. */}
       <div className="md:hidden absolute inset-x-0 bottom-0 h-2/3 z-10 pointer-events-none bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
 
-      {/* Grain — over the video area only. */}
+      {/* Grain — over the video area only. Keeps the content panel clean. */}
       <div
         className="absolute top-0 left-0 h-full w-full md:left-auto md:right-0 md:w-[var(--panel-w)] z-10 pointer-events-none opacity-[0.08] mix-blend-overlay"
         style={{ backgroundImage: GRAIN, backgroundSize: '180px 180px' }}
