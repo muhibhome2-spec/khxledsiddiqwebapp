@@ -37,7 +37,7 @@ const SOCIAL_LINKS = [
 const SocialLinks = () => (
   <motion.nav
     variants={variants.fadeInUp}
-    className="flex flex-wrap justify-center md:justify-start gap-x-[clamp(1.5rem,4vw,2.5rem)] gap-y-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.25em] text-neutral-300"
+    className="flex flex-wrap justify-center md:justify-end gap-x-[clamp(1.5rem,4vw,2.5rem)] gap-y-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.25em] text-neutral-300"
     style={{ fontVariantCaps: 'small-caps' }}
   >
     {SOCIAL_LINKS.map((link) => (
@@ -69,11 +69,10 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       style={{
         // Width of the desktop video panel — exactly a 9:16 slice of viewport
         // height, capped so it never dominates on ultrawide monitors.
-        ['--panel-w' as string]: 'min(56.25vh, 42vw)',
+        ['--panel-w' as string]: 'min(62vh, 48vw)',
       }}
     >
-      {/* Video — full-bleed on mobile, right panel on desktop. Single <video>, one decode.
-          No mask on the video itself — any in-frame text/graphics stay intact. */}
+      {/* Video — full-bleed on mobile, right panel on desktop. Single <video>, one decode. */}
       <video
         className="absolute top-0 left-0 h-full w-full md:left-auto md:right-0 md:w-[var(--panel-w)] object-cover z-0"
         poster={ASSETS.poster}
@@ -87,10 +86,10 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
         <source src={ASSETS.video} type="video/mp4" />
       </video>
 
-      {/* Desktop-only: mostly-black panel with a tiny portrait fragment.
-          The <img> is a small, fixed-size element — NOT a full-panel background.
-          object-position crops to just the face / upper torso of the source photo.
-          A radial mask feathers its edges so it dissolves into the surrounding black. */}
+      {/* Desktop-only: pure-black content panel with a moderately-sized, faintly-visible
+          portrait fragment positioned LEFT of the text column, behind it. Cropped to
+          face/upper-torso, heavily feathered, low opacity so the panel still reads as
+          mostly-black. */}
       <div
         className="hidden md:block absolute top-0 left-0 h-full z-0 pointer-events-none bg-black overflow-hidden"
         style={{ right: 'var(--panel-w)' }}
@@ -103,25 +102,23 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
           decoding="async"
           className="absolute"
           style={{
-            width: '24vh',
-            height: '30vh',
-            top: '14%',
-            right: '8%',
+            width: '48vh',
+            height: '64vh',
+            top: '18%',
+            left: '6%',
             objectFit: 'cover',
-            objectPosition: 'center 15%',
-            opacity: 0.22,
-            filter: 'grayscale(0.6) contrast(1.1)',
+            objectPosition: 'center 12%',
+            opacity: 0.28,
+            filter: 'grayscale(0.55) contrast(1.08)',
             WebkitMaskImage:
-              'radial-gradient(ellipse at center, rgba(0,0,0,1) 25%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%)',
+              'radial-gradient(ellipse at center, rgba(0,0,0,1) 22%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0) 95%)',
             maskImage:
-              'radial-gradient(ellipse at center, rgba(0,0,0,1) 25%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%)',
+              'radial-gradient(ellipse at center, rgba(0,0,0,1) 22%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0) 95%)',
           }}
         />
       </div>
 
-      {/* Desktop-only: soft depth shadow on the content-panel side of the seam.
-          Lives in the content panel only — the video is untouched. Creates the
-          "fading into the video" feel without masking the video. */}
+      {/* Desktop-only: soft depth shadow on the content-panel side of the seam. */}
       <div
         className="hidden md:block absolute top-0 h-full w-40 z-10 pointer-events-none"
         style={{
@@ -134,7 +131,7 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       {/* Mobile-only: bottom vignette for CTA legibility. */}
       <div className="md:hidden absolute inset-x-0 bottom-0 h-2/3 z-10 pointer-events-none bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
 
-      {/* Grain — over the video area only. Keeps the content panel clean. */}
+      {/* Grain — over the video area only. */}
       <div
         className="absolute top-0 left-0 h-full w-full md:left-auto md:right-0 md:w-[var(--panel-w)] z-10 pointer-events-none opacity-[0.08] mix-blend-overlay"
         style={{ backgroundImage: GRAIN, backgroundSize: '180px 180px' }}
@@ -145,36 +142,36 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       <main
         className="relative z-30 min-h-[100dvh] flex flex-col justify-end md:justify-between
                    px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(1.5rem,5vw,3rem)] pb-[clamp(2rem,5vw,4rem)]
-                   md:pl-[clamp(2.5rem,6vw,6rem)] md:py-[clamp(2rem,5vw,4rem)]"
+                   md:pl-[clamp(2.5rem,6vw,6rem)] md:py-[clamp(2.5rem,5vw,4.5rem)]"
         style={{
-          // Reserve desktop right space so content doesn't slide under the video.
+          // Reserve right-side gutter on desktop so content sits flush against the video seam.
           paddingRight: 'max(var(--panel-w) + clamp(2rem, 4vw, 4rem), 1.25rem)',
         }}
       >
-        {/* Desktop-only top row: artist mark */}
+        {/* Desktop-only top row: artist mark, anchored RIGHT against the video seam */}
         <motion.div
           variants={variants.fadeInUp}
-          className="hidden md:flex items-center gap-3 opacity-80"
+          className="hidden md:flex items-center justify-end gap-3 opacity-80 ml-auto w-full max-w-md"
         >
-          <div className="h-px w-10 bg-white/30" />
           <span
             className="text-[10px] tracking-[0.4em] text-zinc-300 font-semibold uppercase"
             style={{ fontVariantCaps: 'small-caps' }}
           >
             khaled siddiq
           </span>
+          <div className="h-px w-10 bg-white/30" />
         </motion.div>
 
-        {/* Bottom stack — full-width centered on mobile, left-anchored on desktop */}
-        <section className="flex flex-col items-center md:items-start w-full max-w-4xl md:max-w-xl text-center md:text-left space-y-[clamp(1.5rem,4vw,2.25rem)] mx-auto md:mx-0">
+        {/* Bottom stack — full-width centered on mobile; right-anchored editorial column on desktop */}
+        <section className="flex flex-col items-center md:items-end w-full max-w-4xl md:max-w-md text-center md:text-right space-y-[clamp(1.5rem,4vw,2.25rem)] mx-auto md:mr-0 md:ml-auto">
           <motion.p
             variants={variants.fadeInUp}
-            className="hidden md:block text-[13px] leading-relaxed text-zinc-400 max-w-sm lowercase tracking-wide"
+            className="hidden md:block text-[13px] leading-relaxed text-zinc-400 lowercase tracking-wide"
           >
             unreleased music. members-only vlogs. everything, first — straight from khaled.
           </motion.p>
 
-          <motion.div variants={variants.fadeInUp} className="flex justify-center md:justify-start relative">
+          <motion.div variants={variants.fadeInUp} className="flex justify-center md:justify-end relative">
             <PremiumGlass
               variant="card"
               intensity="heavy"
@@ -200,7 +197,7 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
 
           <motion.footer
             variants={variants.fadeInUp}
-            className="text-[9px] tracking-[0.3em] text-neutral-500 font-bold pt-[clamp(1rem,3vw,2rem)] w-full text-center md:text-left"
+            className="text-[9px] tracking-[0.3em] text-neutral-500 font-bold pt-[clamp(1rem,3vw,2rem)] w-full text-center md:text-right"
             style={{ fontVariantCaps: 'small-caps' }}
           >
             © 2025 khaled siddiq
