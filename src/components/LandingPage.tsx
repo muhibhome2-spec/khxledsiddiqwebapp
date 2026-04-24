@@ -6,8 +6,13 @@ const VIDEO_ID = 'v1764672902/SnapInsta.to_AQMpeN6rzwY7zA0fIoUQAgnvRjZXjvL5cZqY1
 
 const ASSETS = {
   poster: `${VIDEO_BASE}/q_auto,f_auto,w_720,so_0/${VIDEO_ID}.jpg`,
+  // Server-side blurred, tiny — used purely as the ambient backdrop on desktop.
+  posterBlur: `${VIDEO_BASE}/q_auto,f_auto,w_400,so_0,e_blur:2000/${VIDEO_ID}.jpg`,
   video: `${VIDEO_BASE}/q_auto,f_auto,w_720/${VIDEO_ID}.mp4`,
 };
+
+// Subtle film grain — masks compression artifacts without darkening the frame.
+const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
 
 const TRANSITION = { duration: 1.2, ease: [0.25, 1, 0.5, 1] as const };
 
@@ -34,7 +39,7 @@ const SOCIAL_LINKS = [
 const SocialLinks = () => (
   <motion.nav
     variants={variants.fadeInUp}
-    className="flex flex-wrap justify-center gap-[clamp(1.75rem,4vw,3rem)] text-[10px] font-semibold tracking-[0.25em] text-neutral-300"
+    className="flex flex-wrap justify-center gap-x-[clamp(1.5rem,4vw,3rem)] gap-y-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.25em] text-neutral-300"
     style={{ fontVariantCaps: 'small-caps' }}
   >
     {SOCIAL_LINKS.map((link) => (
@@ -43,7 +48,7 @@ const SocialLinks = () => (
         href={link.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="hover:text-amber-300 active:text-amber-300 transition-colors duration-500 relative group py-2"
+        className="hover:text-amber-300 active:text-amber-300 transition-colors duration-500 relative group py-2 px-1"
       >
         {link.name}
         <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-px bg-amber-300/70 transition-all duration-500 group-hover:w-full group-active:w-full" />
@@ -64,10 +69,27 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       initial="hidden"
       animate="show"
     >
-      {/* --- Background Video: full-frame, centered, undimmed --- */}
-      <div className="fixed inset-0 -z-20">
+      {/* --- Background stack --- */}
+      <div className="fixed inset-0 -z-20 bg-black">
+        {/* Ambient backdrop: blurred poster behind the letterboxed video (desktop only).
+            Mobile is portrait-on-portrait so this layer is hidden there. */}
+        <div
+          className="hidden md:block absolute inset-0 scale-110"
+          style={{
+            backgroundImage: `url(${ASSETS.posterBlur})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'saturate(1.1) brightness(0.55)',
+          }}
+          aria-hidden="true"
+        />
+
+        {/* The video itself:
+              - mobile (portrait viewport): object-cover for a clean full-bleed fit
+              - desktop (landscape viewport): object-contain so the native 9:16 plays
+                at its real aspect ratio — no grainy upscaling, no dead zoom. */}
         <video
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 w-full h-full object-cover md:object-contain"
           poster={ASSETS.poster}
           autoPlay
           loop
@@ -79,14 +101,21 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
           <source src={ASSETS.video} type="video/mp4" />
         </video>
 
-        {/* Subtle bottom vignette only — keeps button legible without dimming the subject. */}
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        {/* Film grain — masks compression artifacts, adds texture. */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.07] mix-blend-overlay"
+          style={{ backgroundImage: GRAIN, backgroundSize: '180px 180px' }}
+          aria-hidden="true"
+        />
+
+        {/* Bottom vignette: lifts CTA legibility without darkening the subject. */}
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
       </div>
 
       {/* --- Layout: CTA + socials anchored to the lower third --- */}
-      <main className="relative z-30 flex-1 flex flex-col justify-end p-[clamp(1.5rem,5vw,5rem)] pb-[clamp(2.5rem,6vw,5rem)] max-w-screen-2xl mx-auto w-full">
+      <main className="relative z-30 flex-1 flex flex-col justify-end px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(1.5rem,5vw,3rem)] pb-[clamp(2rem,5vw,4rem)] max-w-screen-2xl mx-auto w-full">
         <section className="flex flex-col items-center w-full">
-          <div className="w-full max-w-4xl text-center space-y-[clamp(1.75rem,4vw,3rem)]">
+          <div className="w-full max-w-4xl text-center space-y-[clamp(1.5rem,4vw,2.5rem)]">
             <motion.div variants={variants.fadeInUp} className="flex justify-center relative">
               <PremiumGlass
                 variant="card"
@@ -98,7 +127,7 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
                 whileTap={{ scale: 0.98 }}
               >
                 <div
-                  className="py-5 px-10 font-bold text-[11px] tracking-[0.3em] text-neutral-100 group-hover:text-amber-300 group-active:text-amber-300 transition-colors duration-500 flex items-center justify-center relative overflow-hidden"
+                  className="py-[clamp(1rem,3vw,1.35rem)] px-[clamp(2rem,6vw,3rem)] font-bold text-[11px] sm:text-[12px] tracking-[0.3em] text-neutral-100 group-hover:text-amber-300 group-active:text-amber-300 transition-colors duration-500 flex items-center justify-center relative overflow-hidden"
                   style={{ fontVariantCaps: 'small-caps' }}
                 >
                   <span className="relative z-10 drop-shadow-[0_0_12px_rgba(251,191,36,0)] group-hover:drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] group-active:drop-shadow-[0_0_12px_rgba(251,191,36,0.6)] transition-all duration-500">
@@ -115,7 +144,7 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
 
         <motion.footer
           variants={variants.fadeInUp}
-          className="text-center text-[9px] tracking-[0.3em] text-neutral-400 font-bold mt-[clamp(2rem,5vw,3.5rem)]"
+          className="text-center text-[9px] tracking-[0.3em] text-neutral-400 font-bold mt-[clamp(1.5rem,4vw,2.5rem)]"
           style={{ fontVariantCaps: 'small-caps' }}
         >
           © 2025 khaled siddiq
