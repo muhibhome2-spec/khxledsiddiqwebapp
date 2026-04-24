@@ -174,14 +174,15 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
               ))}
             </ul>
 
-            <motion.button
+            <motion.a
+              href="https://buy.stripe.com/3cIcN56AIcnjakoaAPcjS01"
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full py-4 rounded-xl font-semibold text-[11px] tracking-[0.3em] text-black bg-white hover:bg-zinc-100 transition-colors duration-300 relative overflow-hidden"
+              className="block w-full py-4 rounded-xl font-semibold text-[11px] tracking-[0.3em] text-black bg-white hover:bg-zinc-100 transition-colors duration-300 relative overflow-hidden text-center"
               style={{ fontVariantCaps: 'small-caps' }}
             >
               <span className="lowercase">join for $4.99 / month</span>
-            </motion.button>
+            </motion.a>
 
             <p className="text-[10px] text-zinc-600 text-center mt-4 lowercase tracking-wide">
               cancel anytime.
