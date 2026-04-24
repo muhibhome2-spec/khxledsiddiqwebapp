@@ -6,12 +6,10 @@ const VIDEO_ID = 'v1764672902/SnapInsta.to_AQMpeN6rzwY7zA0fIoUQAgnvRjZXjvL5cZqY1
 
 const ASSETS = {
   poster: `${VIDEO_BASE}/q_auto,f_auto,w_720,so_0/${VIDEO_ID}.jpg`,
-  // Server-side blurred, tiny — used purely as the ambient backdrop on desktop.
-  posterBlur: `${VIDEO_BASE}/q_auto,f_auto,w_400,so_0,e_blur:2000/${VIDEO_ID}.jpg`,
   video: `${VIDEO_BASE}/q_auto,f_auto,w_720/${VIDEO_ID}.mp4`,
 };
 
-// Subtle film grain — masks compression artifacts without darkening the frame.
+// Subtle film grain — masks compression, adds texture.
 const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
 
 const TRANSITION = { duration: 1.2, ease: [0.25, 1, 0.5, 1] as const };
@@ -21,7 +19,7 @@ const variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+      transition: { staggerChildren: 0.12, delayChildren: 0.15 },
     },
   },
   fadeInUp: {
@@ -39,7 +37,7 @@ const SOCIAL_LINKS = [
 const SocialLinks = () => (
   <motion.nav
     variants={variants.fadeInUp}
-    className="flex flex-wrap justify-center gap-x-[clamp(1.5rem,4vw,3rem)] gap-y-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.25em] text-neutral-300"
+    className="flex flex-wrap justify-center md:justify-start gap-x-[clamp(1.5rem,4vw,2.5rem)] gap-y-3 text-[10px] sm:text-[11px] font-semibold tracking-[0.25em] text-neutral-300"
     style={{ fontVariantCaps: 'small-caps' }}
   >
     {SOCIAL_LINKS.map((link) => (
@@ -64,91 +62,112 @@ interface LandingPageProps {
 export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
   return (
     <motion.div
-      className="relative min-h-[100dvh] flex flex-col overflow-hidden"
+      className="relative min-h-[100dvh] overflow-hidden bg-black"
       variants={variants.container}
       initial="hidden"
       animate="show"
+      style={{
+        // Width of the desktop video panel — exactly a 9:16 slice of viewport
+        // height, capped so it never dominates on ultrawide monitors.
+        ['--panel-w' as string]: 'min(56.25vh, 42vw)',
+      }}
     >
-      {/* --- Background stack --- */}
-      <div className="fixed inset-0 -z-20 bg-black">
-        {/* Ambient backdrop: blurred poster behind the letterboxed video (desktop only).
-            Mobile is portrait-on-portrait so this layer is hidden there. */}
-        <div
-          className="hidden md:block absolute inset-0 scale-110"
-          style={{
-            backgroundImage: `url(${ASSETS.posterBlur})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'saturate(1.1) brightness(0.55)',
-          }}
-          aria-hidden="true"
-        />
+      {/* Video — full-bleed on mobile, right panel on desktop. Single <video>, one decode. */}
+      <video
+        className="absolute top-0 left-0 h-full w-full md:left-auto md:right-0 md:w-[var(--panel-w)] object-cover z-0"
+        poster={ASSETS.poster}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
+      >
+        <source src={ASSETS.video} type="video/mp4" />
+      </video>
 
-        {/* The video itself:
-              - mobile (portrait viewport): object-cover for a clean full-bleed fit
-              - desktop (landscape viewport): object-contain so the native 9:16 plays
-                at its real aspect ratio — no grainy upscaling, no dead zoom. */}
-        <video
-          className="absolute inset-0 w-full h-full object-cover md:object-contain"
-          poster={ASSETS.poster}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          aria-hidden="true"
-        >
-          <source src={ASSETS.video} type="video/mp4" />
-        </video>
+      {/* Desktop-only: soft edge where left panel meets video. */}
+      <div
+        className="hidden md:block absolute top-0 h-full w-24 z-10 pointer-events-none bg-gradient-to-r from-black to-transparent"
+        style={{ right: 'var(--panel-w)' }}
+        aria-hidden="true"
+      />
 
-        {/* Film grain — masks compression artifacts, adds texture. */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.07] mix-blend-overlay"
-          style={{ backgroundImage: GRAIN, backgroundSize: '180px 180px' }}
-          aria-hidden="true"
-        />
+      {/* Mobile-only: bottom vignette for CTA legibility. */}
+      <div className="md:hidden absolute inset-x-0 bottom-0 h-2/3 z-10 pointer-events-none bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
 
-        {/* Bottom vignette: lifts CTA legibility without darkening the subject. */}
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
-      </div>
+      {/* Grain — over the video area only. */}
+      <div
+        className="absolute top-0 left-0 h-full w-full md:left-auto md:right-0 md:w-[var(--panel-w)] z-10 pointer-events-none opacity-[0.08] mix-blend-overlay"
+        style={{ backgroundImage: GRAIN, backgroundSize: '180px 180px' }}
+        aria-hidden="true"
+      />
 
-      {/* --- Layout: CTA + socials anchored to the lower third --- */}
-      <main className="relative z-30 flex-1 flex flex-col justify-end px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(1.5rem,5vw,3rem)] pb-[clamp(2rem,5vw,4rem)] max-w-screen-2xl mx-auto w-full">
-        <section className="flex flex-col items-center w-full">
-          <div className="w-full max-w-4xl text-center space-y-[clamp(1.5rem,4vw,2.5rem)]">
-            <motion.div variants={variants.fadeInUp} className="flex justify-center relative">
-              <PremiumGlass
-                variant="card"
-                intensity="heavy"
-                glow
-                className="group cursor-pointer border border-white/15 hover:border-amber-300/60 active:border-amber-300/70 transition-colors duration-500"
-                onClick={onEnterCommunity}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div
-                  className="py-[clamp(1rem,3vw,1.35rem)] px-[clamp(2rem,6vw,3rem)] font-bold text-[11px] sm:text-[12px] tracking-[0.3em] text-neutral-100 group-hover:text-amber-300 group-active:text-amber-300 transition-colors duration-500 flex items-center justify-center relative overflow-hidden"
-                  style={{ fontVariantCaps: 'small-caps' }}
-                >
-                  <span className="relative z-10 drop-shadow-[0_0_12px_rgba(251,191,36,0)] group-hover:drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] group-active:drop-shadow-[0_0_12px_rgba(251,191,36,0.6)] transition-all duration-500">
-                    enter community
-                  </span>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full group-active:translate-x-full transition-transform duration-[1.5s] ease-in-out bg-gradient-to-r from-transparent via-amber-300/25 to-transparent skew-x-12" />
-                </div>
-              </PremiumGlass>
-            </motion.div>
-
-            <SocialLinks />
-          </div>
-        </section>
-
-        <motion.footer
+      {/* Content */}
+      <main
+        className="relative z-30 min-h-[100dvh] flex flex-col justify-end md:justify-between
+                   px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(1.5rem,5vw,3rem)] pb-[clamp(2rem,5vw,4rem)]
+                   md:pl-[clamp(2.5rem,6vw,6rem)] md:py-[clamp(2rem,5vw,4rem)]"
+        style={{
+          // Reserve desktop right space so content doesn't slide under the video.
+          paddingRight: 'max(var(--panel-w) + clamp(2rem, 4vw, 4rem), 1.25rem)',
+        }}
+      >
+        {/* Desktop-only top row: artist mark */}
+        <motion.div
           variants={variants.fadeInUp}
-          className="text-center text-[9px] tracking-[0.3em] text-neutral-400 font-bold mt-[clamp(1.5rem,4vw,2.5rem)]"
-          style={{ fontVariantCaps: 'small-caps' }}
+          className="hidden md:flex items-center gap-3 opacity-80"
         >
-          © 2025 khaled siddiq
-        </motion.footer>
+          <div className="h-px w-10 bg-white/30" />
+          <span
+            className="text-[10px] tracking-[0.4em] text-zinc-300 font-semibold uppercase"
+            style={{ fontVariantCaps: 'small-caps' }}
+          >
+            khaled siddiq
+          </span>
+        </motion.div>
+
+        {/* Bottom stack — full-width centered on mobile, left-anchored on desktop */}
+        <section className="flex flex-col items-center md:items-start w-full max-w-4xl md:max-w-xl text-center md:text-left space-y-[clamp(1.5rem,4vw,2.25rem)] mx-auto md:mx-0">
+          <motion.p
+            variants={variants.fadeInUp}
+            className="hidden md:block text-[13px] leading-relaxed text-zinc-400 max-w-sm lowercase tracking-wide"
+          >
+            unreleased music. members-only vlogs. everything, first — straight from khaled.
+          </motion.p>
+
+          <motion.div variants={variants.fadeInUp} className="flex justify-center md:justify-start relative">
+            <PremiumGlass
+              variant="card"
+              intensity="heavy"
+              glow
+              className="group cursor-pointer border border-white/15 hover:border-amber-300/60 active:border-amber-300/70 transition-colors duration-500"
+              onClick={onEnterCommunity}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div
+                className="py-[clamp(1rem,3vw,1.35rem)] px-[clamp(2rem,6vw,3rem)] font-bold text-[11px] sm:text-[12px] tracking-[0.3em] text-neutral-100 group-hover:text-amber-300 group-active:text-amber-300 transition-colors duration-500 flex items-center justify-center relative overflow-hidden"
+                style={{ fontVariantCaps: 'small-caps' }}
+              >
+                <span className="relative z-10 drop-shadow-[0_0_12px_rgba(251,191,36,0)] group-hover:drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] group-active:drop-shadow-[0_0_12px_rgba(251,191,36,0.6)] transition-all duration-500">
+                  enter community
+                </span>
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full group-active:translate-x-full transition-transform duration-[1.5s] ease-in-out bg-gradient-to-r from-transparent via-amber-300/25 to-transparent skew-x-12" />
+              </div>
+            </PremiumGlass>
+          </motion.div>
+
+          <SocialLinks />
+
+          <motion.footer
+            variants={variants.fadeInUp}
+            className="text-[9px] tracking-[0.3em] text-neutral-500 font-bold pt-[clamp(1rem,3vw,2rem)] w-full text-center md:text-left"
+            style={{ fontVariantCaps: 'small-caps' }}
+          >
+            © 2025 khaled siddiq
+          </motion.footer>
+        </section>
       </main>
     </motion.div>
   );
