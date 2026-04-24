@@ -87,24 +87,30 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
         <source src={ASSETS.video} type="video/mp4" />
       </video>
 
-      {/* Desktop-only: ambient portrait backdrop behind the content panel.
-          Sits entirely in the content panel — never overlaps the video, so nothing
-          in the video gets obscured.
-          Layers: radial ink vignette on top + /khaled-portrait.jpg beneath.
-          Degrades gracefully: if the JPG is missing, the vignette alone still reads. */}
+      {/* Desktop-only: mostly-black panel with a faint portrait glimpse.
+          Panel = pure black; on top, a heavily-masked portrait fragment emerges
+          from the darkness — face/top-torso just barely visible, like a ghost
+          behind the text. Tiny spotlight, low opacity, hard falloff. */}
       <div
-        className="hidden md:block absolute top-0 left-0 h-full z-0 pointer-events-none"
-        style={{
-          right: 'var(--panel-w)',
-          backgroundImage:
-            'radial-gradient(ellipse at 30% 45%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.95) 85%), url(https://sufifestival.org/wp-content/uploads/2024/06/Khaled-Siddiq.jpeg)',
-          backgroundSize: 'cover, cover',
-          backgroundPosition: 'center, 25% center',
-          backgroundRepeat: 'no-repeat',
-          filter: 'grayscale(0.35) contrast(1.05)',
-        }}
+        className="hidden md:block absolute top-0 left-0 h-full z-0 pointer-events-none bg-black"
+        style={{ right: 'var(--panel-w)' }}
         aria-hidden="true"
-      />
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: 'url(https://sufifestival.org/wp-content/uploads/2024/06/Khaled-Siddiq.jpeg)',
+            backgroundSize: 'cover',
+            backgroundPosition: '60% 15%',
+            opacity: 0.18,
+            filter: 'grayscale(0.6) contrast(1.1)',
+            WebkitMaskImage:
+              'radial-gradient(ellipse 30% 38% at 65% 28%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0) 85%)',
+            maskImage:
+              'radial-gradient(ellipse 30% 38% at 65% 28%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0) 85%)',
+          }}
+        />
+      </div>
 
       {/* Desktop-only: soft depth shadow on the content-panel side of the seam.
           Lives in the content panel only — the video is untouched. Creates the
