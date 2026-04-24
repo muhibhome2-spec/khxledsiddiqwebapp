@@ -87,27 +87,34 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
         <source src={ASSETS.video} type="video/mp4" />
       </video>
 
-      {/* Desktop-only: mostly-black panel with a faint portrait glimpse.
-          Panel = pure black; on top, a heavily-masked portrait fragment emerges
-          from the darkness — face/top-torso just barely visible, like a ghost
-          behind the text. Tiny spotlight, low opacity, hard falloff. */}
+      {/* Desktop-only: mostly-black panel with a tiny portrait fragment.
+          The <img> is a small, fixed-size element — NOT a full-panel background.
+          object-position crops to just the face / upper torso of the source photo.
+          A radial mask feathers its edges so it dissolves into the surrounding black. */}
       <div
-        className="hidden md:block absolute top-0 left-0 h-full z-0 pointer-events-none bg-black"
+        className="hidden md:block absolute top-0 left-0 h-full z-0 pointer-events-none bg-black overflow-hidden"
         style={{ right: 'var(--panel-w)' }}
         aria-hidden="true"
       >
-        <div
-          className="absolute inset-0"
+        <img
+          src="https://sufifestival.org/wp-content/uploads/2024/06/Khaled-Siddiq.jpeg"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute"
           style={{
-            backgroundImage: 'url(https://sufifestival.org/wp-content/uploads/2024/06/Khaled-Siddiq.jpeg)',
-            backgroundSize: 'cover',
-            backgroundPosition: '60% 15%',
-            opacity: 0.18,
+            width: '24vh',
+            height: '30vh',
+            top: '14%',
+            right: '8%',
+            objectFit: 'cover',
+            objectPosition: 'center 15%',
+            opacity: 0.22,
             filter: 'grayscale(0.6) contrast(1.1)',
             WebkitMaskImage:
-              'radial-gradient(ellipse 30% 38% at 65% 28%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0) 85%)',
+              'radial-gradient(ellipse at center, rgba(0,0,0,1) 25%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%)',
             maskImage:
-              'radial-gradient(ellipse 30% 38% at 65% 28%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0) 85%)',
+              'radial-gradient(ellipse at center, rgba(0,0,0,1) 25%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%)',
           }}
         />
       </div>
