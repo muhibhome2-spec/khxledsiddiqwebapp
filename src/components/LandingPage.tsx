@@ -97,7 +97,7 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
         style={{
           right: 'var(--panel-w)',
           backgroundImage:
-            'radial-gradient(ellipse at 30% 45%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.95) 85%), url(/khaled-portrait.jpg)',
+            'radial-gradient(ellipse at 30% 45%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.95) 85%), url(https://sufifestival.org/wp-content/uploads/2024/06/Khaled-Siddiq.jpeg)',
           backgroundSize: 'cover, cover',
           backgroundPosition: 'center, 25% center',
           backgroundRepeat: 'no-repeat',
