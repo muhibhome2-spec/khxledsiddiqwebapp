@@ -142,11 +142,8 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
       <main
         className="relative z-30 min-h-[100dvh] flex flex-col justify-end md:justify-between
                    px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(1.5rem,5vw,3rem)] pb-[clamp(2rem,5vw,4rem)]
-                   md:pl-[clamp(2.5rem,6vw,6rem)] md:py-[clamp(2.5rem,5vw,4.5rem)]"
-        style={{
-          // Reserve right-side gutter on desktop so content sits flush against the video seam.
-          paddingRight: 'max(var(--panel-w) + clamp(2rem, 4vw, 4rem), 1.25rem)',
-        }}
+                   md:pl-[clamp(2.5rem,6vw,6rem)] md:py-[clamp(2.5rem,5vw,4.5rem)]
+                   md:pr-[calc(var(--panel-w)+clamp(2rem,4vw,4rem))]"
       >
         {/* Desktop-only top row: artist mark, anchored RIGHT against the video seam */}
         <motion.div
