@@ -138,14 +138,16 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
         aria-hidden="true"
       />
 
-      {/* Soft radial vignette over the video — keeps the center crisp, gently
-          darkens corners so the video edges feather into the surrounding black
-          instead of presenting a hard rectangle. Sits ABOVE grain, BELOW content. */}
+      {/* Strong radial vignette over the video — keeps the center crisp, dissolves
+          corners into black so the video doesn't present a hard rectangle.
+          Custom ellipse size (78% x 88%) means the gradient finishes before the
+          rectangle's corners, so corners fall outside the ellipse entirely and stay
+          near-fully black, feathering the edges into the surrounding panel. */}
       <div
         className="absolute top-0 left-0 h-full w-full md:left-auto md:right-0 md:w-[var(--panel-w)] z-20 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 100%)',
+            'radial-gradient(ellipse 78% 88% at center, rgba(0,0,0,0) 45%, rgba(0,0,0,0.85) 95%)',
         }}
         aria-hidden="true"
       />
