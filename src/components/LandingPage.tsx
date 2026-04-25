@@ -138,6 +138,18 @@ export default function LandingPage({ onEnterCommunity }: LandingPageProps) {
         aria-hidden="true"
       />
 
+      {/* Soft radial vignette over the video — keeps the center crisp, gently
+          darkens corners so the video edges feather into the surrounding black
+          instead of presenting a hard rectangle. Sits ABOVE grain, BELOW content. */}
+      <div
+        className="absolute top-0 left-0 h-full w-full md:left-auto md:right-0 md:w-[var(--panel-w)] z-20 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 100%)',
+        }}
+        aria-hidden="true"
+      />
+
       {/* Content */}
       <main
         className="relative z-30 min-h-[100dvh] flex flex-col justify-end md:justify-between
