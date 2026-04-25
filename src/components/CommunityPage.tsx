@@ -143,7 +143,7 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
               </div>
               <div className="text-right">
                 <div className="text-3xl sm:text-4xl font-black tracking-tight text-white lowercase">
-                  $4.99
+                  £4.99
                 </div>
                 <div className="text-[10px] tracking-[0.25em] text-zinc-500 font-semibold uppercase mt-1">
                   / month
@@ -181,7 +181,7 @@ export default function CommunityPage({ onBack }: CommunityPageProps) {
               className="block w-full py-4 rounded-xl font-semibold text-[11px] tracking-[0.3em] text-black bg-white hover:bg-zinc-100 transition-colors duration-300 relative overflow-hidden text-center"
               style={{ fontVariantCaps: 'small-caps' }}
             >
-              <span className="lowercase">join for $4.99 / month</span>
+              <span className="lowercase">join for £4.99 / month</span>
             </motion.a>
 
             <p className="text-[10px] text-zinc-600 text-center mt-4 lowercase tracking-wide">
